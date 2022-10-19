@@ -81,7 +81,10 @@ public class OurBot
         */
 
         //Initialize motor direction
-
+        leftFront.setDirection(Direction.FORWARD);
+        leftBack.setDirection(Direction.FORWARD);
+        rightFront.setDirection(Direction.FORWARD);
+        rightBack.setDirection(Direction.FORWARD);
 
         //Define motor
         leftFront = hwMap.get(DcMotor.class, "leftFront");
