@@ -44,6 +44,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * */
 public class OurBot
 {
+
     /** Encoder counts per motor revolution, usually found in the motor's datasheet */
     public static final double COUNTS_PER_MOTOR_REV = 28;
     /**
