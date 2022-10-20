@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.OurBot;
 /*
     TODO
     Finish opmode loop
-    figure out how controller is connected
+    figure out the range of values remote returns
     set up the speed to be low on one of the joysticks, high on the other
 
 
