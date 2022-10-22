@@ -43,7 +43,6 @@ public class MainDrive extends LinearOpMode {
     public void runOpMode()
     {
         telemetry.addData("Status", "Initialized");
-        telemetry.addData("Seb", "Is Cool");
         telemetry.update();
 
         // Let OurRobot do the heavy lifting of getting and initializing the hardware
