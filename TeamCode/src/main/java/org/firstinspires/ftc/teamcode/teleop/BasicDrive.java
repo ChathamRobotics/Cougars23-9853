@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.OurBot;
  */
 
 @TeleOp(name="Basic Drive")
-public class MainDrive extends LinearOpMode {
+public class BasicDrive extends LinearOpMode {
     private final OurBot robot = new OurBot();
     private double basePower = 0.8;
 
@@ -56,6 +56,37 @@ public class MainDrive extends LinearOpMode {
         // Run until the end of the match (driver presses STOP)
         while(opModeIsActive())
         {
+
+            /*
+            Gamepad 1 controls
+
+            going to first use both joysticks to move
+
+            left joystick moves left side up, right moves right up
+
+
+             */
+
+            //drive
+
+            //drive is flipped because pushing "up" is negative number
+            double leftDrive = (-1)*gamepad1.left_stick_y;
+            double rightDrive = (-1)*gamepad1.right_stick_y;
+            double leftPower = leftDrive*basePower;
+            double rightPower = rightDrive*basePower;
+
+
+            //sets power for all motors
+            robot.leftFront.setPower(leftPower);
+            robot.leftBack.setPower(leftPower);
+            robot.rightFront.setPower(rightPower);
+            robot.rightBack.setPower(rightPower);
+
+
+            //updates control hub
+            telemetry.addData("Power", basePower);
+            telemetry.update();
+
 
 
         }
