@@ -15,16 +15,16 @@ import org.firstinspires.ftc.teamcode.OurBot;
 
 /*
     TODO
-    Finish opmode loop
-    figure out the range of values remote returns
-    set up the speed to be low on one of the joysticks, high on the other
+
+    fix motor assignments
+    set up a better drive
 
 
 
  */
 
 @TeleOp(name="Basic Drive")
-public class BasicDrive extends LinearOpMode {
+public class TankDrive extends LinearOpMode {
     private final OurBot robot = new OurBot();
     private double basePower = 0.8;
 

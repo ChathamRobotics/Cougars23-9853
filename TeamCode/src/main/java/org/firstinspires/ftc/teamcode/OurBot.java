@@ -109,5 +109,9 @@ public class OurBot
         leftBack.setMode(RunMode.RUN_USING_ENCODER);
         rightFront.setMode(RunMode.RUN_USING_ENCODER);
         rightBack.setMode(RunMode.RUN_USING_ENCODER);
+
+
+        //stops motors when 0 power, more precision
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }
