@@ -80,23 +80,25 @@ public class OurBot
         leftFront = 3
         */
 
-        //Initialize motor direction
-        leftFront.setDirection(Direction.FORWARD);
-        leftBack.setDirection(Direction.FORWARD);
-        rightFront.setDirection(Direction.FORWARD);
-        rightBack.setDirection(Direction.FORWARD);
-
         //Define motor
         leftFront = hwMap.get(DcMotor.class, "leftFront");
         leftBack = hwMap.get(DcMotor.class, "leftBack");
         rightFront = hwMap.get(DcMotor.class, "rightFront");
         rightBack = hwMap.get(DcMotor.class, "rightBack");
 
+        //Initialize motor direction
+        leftFront.setDirection(Direction.FORWARD);
+        leftBack.setDirection(Direction.FORWARD);
+        rightFront.setDirection(Direction.FORWARD);
+        rightBack.setDirection(Direction.FORWARD);
+
+
         //Set all motors to 0 power
         leftFront.setPower(0);
         leftBack.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
+
 
         //Reset all encoders
         leftFront.setMode(RunMode.STOP_AND_RESET_ENCODER);
