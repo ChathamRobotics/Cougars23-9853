@@ -70,6 +70,7 @@ public class TankDrive extends LinearOpMode {
             //drive
 
             //the way motors are config, this is what gets tank drive to work
+            //negative == forward
             double leftDrive = gamepad1.left_stick_y;
             double rightDrive = gamepad1.right_stick_y;
             double rightTrigger = gamepad1.right_trigger;
@@ -78,23 +79,31 @@ public class TankDrive extends LinearOpMode {
             double leftPower = leftDrive * basePower;
             double rightPower = rightDrive * basePower;
 
+
+            //strafe right
             if (rightTrigger > 0) {
-                //negative == forward
+
+                //left wheels going out
+                //right wheels going in
                 robot.leftFront.setPower(-1 * basePower);
                 robot.leftBack.setPower(basePower);
                 robot.rightFront.setPower(basePower);
                 robot.rightBack.setPower(-1 * basePower);
 
-                //whichever side its going to those wheels go in
 
-            } else if (leftTrigger > 0) {
+
+            }
+            //strafe left
+            else if (leftTrigger > 0) {
+                //left wheels going in
+                //right wheels going out
                 robot.leftFront.setPower(basePower);
                 robot.leftBack.setPower(-1 * basePower);
-                robot.rightFront.setPower(basePower);
-                robot.rightBack.setPower(-1 * basePower);
+                robot.rightFront.setPower(-1*basePower);
+                robot.rightBack.setPower(basePower);
 
             } else {
-                //sets power for all motors
+                //sets power for main tank drive
                 robot.leftFront.setPower(leftPower);
                 robot.leftBack.setPower(leftPower);
                 robot.rightFront.setPower(rightPower);
