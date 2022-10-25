@@ -70,7 +70,8 @@ public class TankDrive extends LinearOpMode {
             //drive
 
             //the way motors are config, this is what gets tank drive to work
-            //negative == forward
+            //negative == forward for motor power
+            //negative == push up on gamepad
             double leftDrive = gamepad1.left_stick_y;
             double rightDrive = gamepad1.right_stick_y;
             double rightTrigger = gamepad1.right_trigger;
