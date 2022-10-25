@@ -74,10 +74,10 @@ public class OurBot
     public void init(HardwareMap hwMap)
     {
         /*
-        rightBack = 0
-        rightFront = 1
-        leftBack = 2
-        leftFront = 3
+        leftBack = 0
+        leftFront = 1
+        rightBack = 2
+        rightFront = 3
         */
 
         //Define motor

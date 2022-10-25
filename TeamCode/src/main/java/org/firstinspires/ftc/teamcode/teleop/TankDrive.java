@@ -69,24 +69,43 @@ public class TankDrive extends LinearOpMode {
 
             //drive
 
-            //drive is flipped because pushing "up" is negative number
-            double leftDrive = (-1)*gamepad1.left_stick_y;
-            double rightDrive = (-1)*gamepad1.right_stick_y;
-            double leftPower = leftDrive*basePower;
-            double rightPower = rightDrive*basePower;
+            //the way motors are config, this is what gets tank drive to work
+            double leftDrive = gamepad1.left_stick_y;
+            double rightDrive = gamepad1.right_stick_y;
+            double rightTrigger = gamepad1.right_trigger;
+            double leftTrigger = gamepad1.left_trigger;
 
+            double leftPower = leftDrive * basePower;
+            double rightPower = rightDrive * basePower;
 
-            //sets power for all motors
-            robot.leftFront.setPower(leftPower);
-            robot.leftBack.setPower(leftPower);
-            robot.rightFront.setPower(rightPower);
-            robot.rightBack.setPower(rightPower);
+            if (rightTrigger > 0) {
+                //negative == forward
+                robot.leftFront.setPower(-1 * basePower);
+                robot.leftBack.setPower(basePower);
+                robot.rightFront.setPower(basePower);
+                robot.rightBack.setPower(-1 * basePower);
+
+                //whichever side its going to those wheels go in
+
+            } else if (leftTrigger > 0) {
+                robot.leftFront.setPower(basePower);
+                robot.leftBack.setPower(-1 * basePower);
+                robot.rightFront.setPower(basePower);
+                robot.rightBack.setPower(-1 * basePower);
+
+            } else {
+                //sets power for all motors
+                robot.leftFront.setPower(leftPower);
+                robot.leftBack.setPower(leftPower);
+                robot.rightFront.setPower(rightPower);
+                robot.rightBack.setPower(rightPower);
+
+            }
 
 
             //updates control hub
             telemetry.addData("Power", basePower);
             telemetry.update();
-
 
 
         }
