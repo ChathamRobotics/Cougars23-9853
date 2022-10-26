@@ -16,14 +16,17 @@ import org.firstinspires.ftc.teamcode.OurBot;
 /*
     TODO
 
-    fix motor assignments
-    set up a better drive
+    reverse the motor direction so positive power value = forwards motion
+    make a secondary set of controls, other way of controlling to see which one is better
+    condense code a little bit, make neater
+    make a test opmode
+    talk about auton
 
 
 
  */
 
-@TeleOp(name="Basic Drive")
+@TeleOp(name="Tank Drive")
 public class TankDrive extends LinearOpMode {
     private final OurBot robot = new OurBot();
     private double basePower = 0.8;
