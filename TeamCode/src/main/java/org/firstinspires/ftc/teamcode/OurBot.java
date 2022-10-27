@@ -74,10 +74,10 @@ public class OurBot
     public void init(HardwareMap hwMap)
     {
         /*
-        leftBack = 0
-        leftFront = 1
-        rightBack = 2
-        rightFront = 3
+        leftBack = 2
+        leftFront = 3
+        rightBack = 0
+        rightFront = 1
         */
 
         //Define motor
@@ -87,10 +87,10 @@ public class OurBot
         rightBack = hwMap.get(DcMotor.class, "rightBack");
 
         //Initialize motor direction
-        leftFront.setDirection(Direction.FORWARD);
-        leftBack.setDirection(Direction.FORWARD);
-        rightFront.setDirection(Direction.FORWARD);
-        rightBack.setDirection(Direction.FORWARD);
+        leftFront.setDirection(Direction.REVERSE);
+        leftBack.setDirection(Direction.REVERSE);
+        rightFront.setDirection(Direction.REVERSE);
+        rightBack.setDirection(Direction.REVERSE);
 
 
         //Set all motors to 0 power
@@ -115,5 +115,8 @@ public class OurBot
 
         //stops motors when 0 power, more precision
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }

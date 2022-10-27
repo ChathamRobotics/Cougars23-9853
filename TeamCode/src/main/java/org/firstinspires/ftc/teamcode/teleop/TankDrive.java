@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.OurBot;
 @TeleOp(name="Tank Drive")
 public class TankDrive extends LinearOpMode {
     private final OurBot robot = new OurBot();
-    private double basePower = 0.8;
+    private double basePower = 0.3;
 
 
     private final double FAST_DRIVE_POWER = 0.8;
@@ -73,10 +73,10 @@ public class TankDrive extends LinearOpMode {
             //drive
 
             //the way motors are config, this is what gets tank drive to work
-            //negative == forward for motor power
+            //postitive == forward for motor
             //negative == push up on gamepad
-            double leftDrive = gamepad1.left_stick_y;
-            double rightDrive = gamepad1.right_stick_y;
+            double leftDrive = -(gamepad1.left_stick_y);
+            double rightDrive = -(gamepad1.right_stick_y);
             double rightTrigger = gamepad1.right_trigger;
             double leftTrigger = gamepad1.left_trigger;
 
@@ -89,10 +89,10 @@ public class TankDrive extends LinearOpMode {
 
                 //left wheels going out
                 //right wheels going in
-                robot.leftFront.setPower(-1 * basePower);
-                robot.leftBack.setPower(basePower);
-                robot.rightFront.setPower(basePower);
-                robot.rightBack.setPower(-1 * basePower);
+                robot.leftFront.setPower(basePower * rightTrigger);
+                robot.leftBack.setPower(-(basePower * rightTrigger));
+                robot.rightFront.setPower(-(basePower*rightTrigger));
+                robot.rightBack.setPower(basePower*rightTrigger);
 
 
 
@@ -101,10 +101,10 @@ public class TankDrive extends LinearOpMode {
             else if (leftTrigger > 0) {
                 //left wheels going in
                 //right wheels going out
-                robot.leftFront.setPower(basePower);
-                robot.leftBack.setPower(-1 * basePower);
-                robot.rightFront.setPower(-1*basePower);
-                robot.rightBack.setPower(basePower);
+                robot.leftFront.setPower(-(basePower * leftTrigger));
+                robot.leftBack.setPower(basePower * leftTrigger);
+                robot.rightFront.setPower(basePower * leftTrigger);
+                robot.rightBack.setPower(-(basePower * leftTrigger));
 
             } else {
                 //sets power for main tank drive
