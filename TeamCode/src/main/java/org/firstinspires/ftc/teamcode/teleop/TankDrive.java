@@ -32,10 +32,8 @@ public class TankDrive extends LinearOpMode {
     private double basePower = 0.3;
 
 
-    private final double FAST_DRIVE_POWER = 0.8;
-    private final double SLOW_DRIVE_POWER = 0.5;
-    private final double ARM_POWER = 0.4;
-    private final double INTAKE_POWER = 0.8;
+
+
 
 
 
@@ -116,7 +114,7 @@ public class TankDrive extends LinearOpMode {
             }
 
 
-            //updates control hub
+            //updates driver hub
             telemetry.addData("Power", basePower);
             telemetry.update();
 
