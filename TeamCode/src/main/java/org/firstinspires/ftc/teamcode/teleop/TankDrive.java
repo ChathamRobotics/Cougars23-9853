@@ -46,6 +46,8 @@ public class TankDrive extends LinearOpMode {
     public void runOpMode()
     {
         telemetry.addData("Status", "Initialized");
+
+
         telemetry.update();
 
         // Let OurRobot do the heavy lifting of getting and initializing the hardware
@@ -73,8 +75,6 @@ public class TankDrive extends LinearOpMode {
             //drive
 
             //the way motors are config, this is what gets tank drive to work
-            //negative == forward for motor power
-            //negative == push up on gamepad
             double leftDrive = gamepad1.left_stick_y;
             double rightDrive = gamepad1.right_stick_y;
             double rightTrigger = gamepad1.right_trigger;
@@ -103,7 +103,7 @@ public class TankDrive extends LinearOpMode {
                 //right wheels going out
                 robot.leftFront.setPower(basePower);
                 robot.leftBack.setPower(-1 * basePower);
-                robot.rightFront.setPower(-1*basePower);
+                robot.rightFront.setPower(-1 * basePower);
                 robot.rightBack.setPower(basePower);
 
             } else {
