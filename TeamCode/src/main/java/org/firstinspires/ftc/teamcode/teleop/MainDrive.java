@@ -22,6 +22,9 @@ public class MainDrive extends LinearOpMode{
 
     public void runOpMode()
     {
+        double power = basePower;
+        double lowPower = basePower - 0.2;
+        double highPower = basePower + 0.2;
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -33,10 +36,16 @@ public class MainDrive extends LinearOpMode{
 
         while(opModeIsActive())
         {
+            if (gamepad1.dpad_down){
+                power = lowPower;
+            }
+            if (gamepad1.dpad_up){
+                power = highPower;
+            }
             double drive = -(gamepad1.left_stick_y);
             double turn = gamepad1.right_stick_x;
-            double leftPower = Range.clip(drive + turn, -1, 1) * basePower;
-            double rightPower = Range.clip(drive - turn, -1, 1) * basePower;
+            double leftPower = Range.clip(drive + turn, -1, 1) * power;
+            double rightPower = Range.clip(drive - turn, -1, 1) * power;
 
             robot.leftFront.setPower(leftPower);
             robot.leftBack.setPower(leftPower);
