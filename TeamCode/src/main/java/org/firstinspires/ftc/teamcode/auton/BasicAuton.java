@@ -12,6 +12,28 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.OurBot;
 
+@Autonomous(name = "Basic Auton")
 public class BasicAuton extends BaseAuton{
 
+    @Override
+    public void runOpMode() {
+
+        //sets up auton by running parent's method
+        super.runOpMode();
+
+        //parent class sends message to verify succesful encoder setup
+
+        //wait for driver to press play
+        waitForStart();
+
+        encoderDrive(0.5, 12, 12, 5);
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+        sleep(1000);  // pause to display final telemetry message.
+
+
+
+
+    }
 }
