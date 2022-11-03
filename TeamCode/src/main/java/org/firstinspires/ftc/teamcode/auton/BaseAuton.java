@@ -17,8 +17,7 @@ import org.firstinspires.ftc.teamcode.OurBot;
 public class BaseAuton extends LinearOpMode {
     final OurBot robot = new OurBot();
 
-    //dont know what this does
-    //BNO055IMU imu = null;
+
 
     //gets our run time in case we want to use time
     private final ElapsedTime runtime = new ElapsedTime();
@@ -64,6 +63,7 @@ public class BaseAuton extends LinearOpMode {
             leftBackStart = robot.leftBack.getCurrentPosition();
             rightFrontStart = robot.rightFront.getCurrentPosition();
             rightBackStart = robot.rightBack.getCurrentPosition();
+
 
 
             // Determine new target position, and pass to motor controller
@@ -129,5 +129,10 @@ public class BaseAuton extends LinearOpMode {
 
 
     }
+
+
+
+
+
 
 }

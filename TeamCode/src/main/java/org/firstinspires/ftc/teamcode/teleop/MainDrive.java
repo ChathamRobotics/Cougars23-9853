@@ -47,11 +47,16 @@ public class MainDrive extends LinearOpMode{
             double leftPower = Range.clip(drive + turn, -1, 1) * power;
             double rightPower = Range.clip(drive - turn, -1, 1) * power;
 
+
+            //sets the power for the robot
             robot.leftFront.setPower(leftPower);
             robot.leftBack.setPower(leftPower);
             robot.rightFront.setPower(rightPower);
             robot.rightBack.setPower(rightPower);
 
+
+
+            //updates telemetry
             telemetry.addData("Left Power", leftPower);
             telemetry.addData("Right Power", rightPower);
             telemetry.addData("Right Stick x", gamepad1.right_stick_x);

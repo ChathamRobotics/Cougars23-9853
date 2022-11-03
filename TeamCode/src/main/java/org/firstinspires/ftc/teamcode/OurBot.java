@@ -59,7 +59,7 @@ public class OurBot
      * Encoder counts per inch the robot moves
      * This is what's actually used to calculate how much the motors should turn
      */
-    public static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI) * -1;
+    public static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
     /*
      * Defining the motors and servos
