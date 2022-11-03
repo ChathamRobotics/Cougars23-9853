@@ -461,7 +461,7 @@ Version 5.5 requires Android Studio 4.0 or later.
     * Fixes bug where preview got totally messed up when rotating phone
     * Fixes bug where crosshair could drift off target when using webcams
 * Fixes issue in UVC driver on some devices ([ftc_app 681](https://github.com/ftctechnh/ftc_app/issues/681)) if streaming was started/stopped multiple times in a row
-    * Issue manifested as kernel panic on devices which do not have [this kernel patch](https://lore.kernel.org/patchwork/patch/352400/).
+    * Issue manifested as kernel panic on  devices which do not have [this kernel patch](https://lore.kernel.org/patchwork/patch/352400/).
     * On affected devices which **do** have the patch, the issue was manifest as simply a failure to start streaming.
     * The Tech Team believes that the root cause of the issue is a bug in the Linux kernel XHCI driver. A workaround was implemented in the SDK UVC driver.
 * Fixes bug in UVC driver where often half the frames from the camera would be dropped (e.g. only 15FPS delivered during a streaming session configured for 30FPS).
