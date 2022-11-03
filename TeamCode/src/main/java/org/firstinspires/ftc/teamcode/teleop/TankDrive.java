@@ -14,13 +14,13 @@ import org.firstinspires.ftc.teamcode.OurBot;
 
 
 /*
-    TODO
+ TODO
 
-    reverse the motor direction so positive power value = forwards motion
-    make a secondary set of controls, other way of controlling to see which one is better
-    condense code a little bit, make neater
-    make a test opmode
-    talk about auton
+ reverse the motor direction so positive power value = forwards motion
+ make a secondary set of controls, other way of controlling to see which one is better
+ condense code a little bit, make neater
+ make a test opmode
+ talk about auton
 
 
 
@@ -32,17 +32,15 @@ public class TankDrive extends LinearOpMode {
     private double basePower = 0.3;
 
 
-    private final double FAST_DRIVE_POWER = 0.8;
-    private final double SLOW_DRIVE_POWER = 0.5;
-    private final double ARM_POWER = 0.4;
-    private final double INTAKE_POWER = 0.8;
+
+
 
 
 
     /*
     The main loop for the controller
 
-     */
+    */
     public void runOpMode()
     {
         telemetry.addData("Status", "Initialized");
@@ -60,12 +58,13 @@ public class TankDrive extends LinearOpMode {
         while(opModeIsActive())
         {
 
-            /*
-            Gamepad 1 controls
 
-            going to first use both joysticks to move
+             /*
+             Gamepad 1 controls
 
-            left joystick moves left side up, right moves right up
+             going to first use both joysticks to move
+
+             left joystick moves left side up, right moves right up
 
 
              */
@@ -116,7 +115,7 @@ public class TankDrive extends LinearOpMode {
             }
 
 
-            //updates control hub
+            //updates driver hub
             telemetry.addData("Power", basePower);
             telemetry.update();
 
