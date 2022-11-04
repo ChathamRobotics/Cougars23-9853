@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.OurBot;
 @TeleOp(name="Main Drive")
 public class MainDrive extends LinearOpMode{
     private final OurBot robot = new OurBot();
-    private double basePower = 0.3;
+    private final double basePower = 0.3;
 
     public void runOpMode()
     {
@@ -49,11 +49,11 @@ public class MainDrive extends LinearOpMode{
             double rightTrigger = gamepad1.right_trigger;
             double leftTrigger = gamepad1.left_trigger;
 
-            //strafe right
+            // Strafe right
             if (rightTrigger > 0) {
 
-                //left wheels going out
-                //right wheels going in
+                // Left wheels going out
+                // Light wheels going in
                 robot.leftFront.setPower(basePower * rightTrigger);
                 robot.leftBack.setPower(-(basePower * rightTrigger));
                 robot.rightFront.setPower(-(basePower * rightTrigger));
@@ -61,17 +61,17 @@ public class MainDrive extends LinearOpMode{
 
 
             }
-            //strafe left
+            // Strafe left
             else if (leftTrigger > 0) {
-                //left wheels going in
-                //right wheels going out
+                // Left wheels going in
+                // Right wheels going out
                 robot.leftFront.setPower(-(basePower * leftTrigger));
                 robot.leftBack.setPower(basePower * leftTrigger);
                 robot.rightFront.setPower(basePower * leftTrigger);
                 robot.rightBack.setPower(-(basePower * leftTrigger));
 
             } else {
-                //sets power for main drive
+                // Sets power for main drive
                 robot.leftFront.setPower(leftPower);
                 robot.leftBack.setPower(leftPower);
                 robot.rightFront.setPower(rightPower);
@@ -79,15 +79,14 @@ public class MainDrive extends LinearOpMode{
 
             }
 
-            //sets the power for the robot
+            // Sets the power for the robot
             robot.leftFront.setPower(leftPower);
             robot.leftBack.setPower(leftPower);
             robot.rightFront.setPower(rightPower);
             robot.rightBack.setPower(rightPower);
 
 
-
-            //updates telemetry
+            // Updates telemetry
             telemetry.addData("Left Power", leftPower);
             telemetry.addData("Right Power", rightPower);
             telemetry.addData("Right Stick x", gamepad1.right_stick_x);
