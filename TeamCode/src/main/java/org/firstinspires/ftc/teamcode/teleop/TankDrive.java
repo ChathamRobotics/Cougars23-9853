@@ -14,13 +14,13 @@ import org.firstinspires.ftc.teamcode.OurBot;
 
 
 /*
-    TODO
+ TODO
 
-    reverse the motor direction so positive power value = forwards motion
-    make a secondary set of controls, other way of controlling to see which one is better
-    condense code a little bit, make neater
-    make a test opmode
-    talk about auton
+ reverse the motor direction so positive power value = forwards motion
+ make a secondary set of controls, other way of controlling to see which one is better
+ condense code a little bit, make neater
+ make a test opmode
+ talk about auton
 
 
 
@@ -29,20 +29,18 @@ import org.firstinspires.ftc.teamcode.OurBot;
 @TeleOp(name="Tank Drive")
 public class TankDrive extends LinearOpMode {
     private final OurBot robot = new OurBot();
-    private double basePower = 0.8;
+    private double basePower = 0.3;
 
 
-    private final double FAST_DRIVE_POWER = 0.8;
-    private final double SLOW_DRIVE_POWER = 0.5;
-    private final double ARM_POWER = 0.4;
-    private final double INTAKE_POWER = 0.8;
+
+
 
 
 
     /*
     The main loop for the controller
 
-     */
+    */
     public void runOpMode()
     {
         telemetry.addData("Status", "Initialized");
@@ -60,12 +58,13 @@ public class TankDrive extends LinearOpMode {
         while(opModeIsActive())
         {
 
-            /*
-            Gamepad 1 controls
 
-            going to first use both joysticks to move
+             /*
+             Gamepad 1 controls
 
-            left joystick moves left side up, right moves right up
+             going to first use both joysticks to move
+
+             left joystick moves left side up, right moves right up
 
 
              */
@@ -73,8 +72,10 @@ public class TankDrive extends LinearOpMode {
             //drive
 
             //the way motors are config, this is what gets tank drive to work
-            double leftDrive = gamepad1.left_stick_y;
-            double rightDrive = gamepad1.right_stick_y;
+            //postitive == forward for motor
+            //negative == push up on gamepad
+            double leftDrive = -(gamepad1.left_stick_y);
+            double rightDrive = -(gamepad1.right_stick_y);
             double rightTrigger = gamepad1.right_trigger;
             double leftTrigger = gamepad1.left_trigger;
 
@@ -87,10 +88,10 @@ public class TankDrive extends LinearOpMode {
 
                 //left wheels going out
                 //right wheels going in
-                robot.leftFront.setPower(-1 * basePower);
-                robot.leftBack.setPower(basePower);
-                robot.rightFront.setPower(basePower);
-                robot.rightBack.setPower(-1 * basePower);
+                robot.leftFront.setPower(basePower * rightTrigger);
+                robot.leftBack.setPower(-(basePower * rightTrigger));
+                robot.rightFront.setPower(-(basePower*rightTrigger));
+                robot.rightBack.setPower(basePower*rightTrigger);
 
 
 
@@ -99,10 +100,10 @@ public class TankDrive extends LinearOpMode {
             else if (leftTrigger > 0) {
                 //left wheels going in
                 //right wheels going out
-                robot.leftFront.setPower(basePower);
-                robot.leftBack.setPower(-1 * basePower);
-                robot.rightFront.setPower(-1 * basePower);
-                robot.rightBack.setPower(basePower);
+                robot.leftFront.setPower(-(basePower * leftTrigger));
+                robot.leftBack.setPower(basePower * leftTrigger);
+                robot.rightFront.setPower(basePower * leftTrigger);
+                robot.rightBack.setPower(-(basePower * leftTrigger));
 
             } else {
                 //sets power for main tank drive
@@ -114,7 +115,7 @@ public class TankDrive extends LinearOpMode {
             }
 
 
-            //updates control hub
+            //updates driver hub
             telemetry.addData("Power", basePower);
             telemetry.update();
 
