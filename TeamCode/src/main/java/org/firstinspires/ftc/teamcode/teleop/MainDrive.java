@@ -36,28 +36,36 @@ public class MainDrive extends LinearOpMode{
 
         while(opModeIsActive())
         {
-            if (gamepad1.dpad_down) {
-                power = lowPower;
-            }
-            if (gamepad1.dpad_up) {
-                power = highPower;
-            }
+
             double drive = -(gamepad1.left_stick_y);
             double turn = gamepad1.right_stick_x;
             double leftPower = Range.clip(drive + turn, -1, 1) * power;
             double rightPower = Range.clip(drive - turn, -1, 1) * power;
             double rightTrigger = gamepad1.right_trigger;
             double leftTrigger = gamepad1.left_trigger;
-
+            if (gamepad1.dpad_down) {
+                if (power == basePower) {
+                    power = lowPower;
+                } else {
+                    power = basePower;
+                }
+            }
+            if (gamepad1.dpad_up) {
+                if (power == basePower) {
+                    power = highPower;
+                } else {
+                    power = basePower;
+                }
+            }
             // Strafe right
             if (rightTrigger > 0) {
 
                 // Left wheels going out
                 // Light wheels going in
-                robot.leftFront.setPower(basePower * rightTrigger);
-                robot.leftBack.setPower(-(basePower * rightTrigger));
-                robot.rightFront.setPower(-(basePower * rightTrigger));
-                robot.rightBack.setPower(basePower * rightTrigger);
+                robot.leftFront.setPower(basePower * 1);
+                robot.leftBack.setPower(-(basePower * 1));
+                robot.rightFront.setPower(-(basePower * 1));
+                robot.rightBack.setPower(basePower * 1);
 
 
             }
@@ -65,10 +73,10 @@ public class MainDrive extends LinearOpMode{
             else if (leftTrigger > 0) {
                 // Left wheels going in
                 // Right wheels going out
-                robot.leftFront.setPower(-(basePower * leftTrigger));
-                robot.leftBack.setPower(basePower * leftTrigger);
-                robot.rightFront.setPower(basePower * leftTrigger);
-                robot.rightBack.setPower(-(basePower * leftTrigger));
+                robot.leftFront.setPower(-(basePower * 1));
+                robot.leftBack.setPower(basePower * 1);
+                robot.rightFront.setPower(basePower * 1);
+                robot.rightBack.setPower(-(basePower * 1));
 
             } else {
                 // Sets power for main drive
@@ -78,12 +86,6 @@ public class MainDrive extends LinearOpMode{
                 robot.rightBack.setPower(rightPower);
 
             }
-
-            // Sets the power for the robot
-            robot.leftFront.setPower(leftPower);
-            robot.leftBack.setPower(leftPower);
-            robot.rightFront.setPower(rightPower);
-            robot.rightBack.setPower(rightPower);
 
 
             // Updates telemetry
