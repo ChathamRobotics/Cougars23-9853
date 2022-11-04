@@ -46,8 +46,6 @@ public class TankDrive extends LinearOpMode {
     public void runOpMode()
     {
         telemetry.addData("Status", "Initialized");
-
-
         telemetry.update();
 
         // Let OurRobot do the heavy lifting of getting and initializing the hardware
