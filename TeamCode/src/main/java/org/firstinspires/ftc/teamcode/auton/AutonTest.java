@@ -12,53 +12,39 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.OurBot;
+public class AutonTest extends BaseAuton{
 
-@Autonomous(name = "BaseAuton")
-public class BaseAuton extends LinearOpMode {
-    final OurBot robot = new OurBot();
+    //set distance to one square on the field
+    double distance = 24;
+
+    //can fiddle with this to test it properly
+    double power = 0.5;
 
 
+    //max time the move can take
+    double timeout = 5;
 
-    //gets our run time in case we want to use time
-    public final ElapsedTime runtime = new ElapsedTime();
 
+    int leftFrontStart;
+    int leftBackStart;
+    int rightFrontStart;
+    int rightBackStart;
+
+    int leftFrontTarget;
+    int leftBackTarget;
+    int rightFrontTarget;
+    int rightBackTarget;
+
+
+    //this method runs runOpMode() in BaseAuton which inits robot and some other things
     public void runOpMode()
     {
-        robot.init(hardwareMap);
+        super.runOpMode();
+        waitForStart();
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Initializing Hardware"); //
-        telemetry.update();
-
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d, %7d, %7d, %7d",
-                robot.leftFront.getCurrentPosition(),
-                robot.leftBack.getCurrentPosition(),
-                robot.rightFront.getCurrentPosition(),
-                robot.rightBack.getCurrentPosition());
-        telemetry.update();
-    }
-
-
-    //uses speed and the amount we want to move each side by to move robot
-    protected void encoderDrive(double power, double leftInches, double rightInches, double timeout)
-    {
-
-        //set up variables
-        int leftFrontStart;
-        int leftBackStart;
-        int rightFrontStart;
-        int rightBackStart;
-
-        int leftFrontTarget;
-        int leftBackTarget;
-        int rightFrontTarget;
-        int rightBackTarget;
-
+        //makes sure opMode is still active
         if(opModeIsActive())
         {
-            //set starting variables
             leftFrontStart = robot.leftFront.getCurrentPosition();
             leftBackStart = robot.leftBack.getCurrentPosition();
             rightFrontStart = robot.rightFront.getCurrentPosition();
@@ -67,24 +53,27 @@ public class BaseAuton extends LinearOpMode {
 
 
             // Determine new target position, and pass to motor controller
-            leftFrontTarget = leftFrontStart + (int) (leftInches * OurBot.COUNTS_PER_INCH);
-            leftBackTarget = leftBackStart + (int) (leftInches * OurBot.COUNTS_PER_INCH);
-            rightFrontTarget = rightFrontStart + (int) (rightInches * OurBot.COUNTS_PER_INCH);
-            rightBackTarget = rightBackStart + (int) (rightInches * OurBot.COUNTS_PER_INCH);
+            leftFrontTarget = leftFrontStart + (int) (distance * OurBot.COUNTS_PER_INCH);
+            leftBackTarget = leftBackStart + (int) (distance * OurBot.COUNTS_PER_INCH);
+            rightFrontTarget = rightFrontStart + (int) (distance * OurBot.COUNTS_PER_INCH);
+            rightBackTarget = rightBackStart + (int) (distance * OurBot.COUNTS_PER_INCH);
 
-            //set the robot's new position that it has to get to
+
+            //sets the position the robot will run to with encoderes
             robot.leftFront.setTargetPosition(leftFrontTarget);
             robot.leftBack.setTargetPosition(leftBackTarget);
             robot.rightFront.setTargetPosition(rightFrontTarget);
             robot.rightBack.setTargetPosition(rightBackTarget);
 
-            // Turn On RUN_TO_POSITION
+
+            //makes the robot run to position given power (next step)
             robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
+            //don't worry about the time stuff
             runtime.reset();
             power = Math.abs(power);
             robot.leftFront.setPower(power);
@@ -92,22 +81,15 @@ public class BaseAuton extends LinearOpMode {
             robot.rightFront.setPower(power);
             robot.rightBack.setPower(power);
 
-
-            /*
-
-            will keep updating telemetry data until:
-            1. opmode is ended by driver
-            2. move runs out of time originally set
-            3. the robot is in its target position
-
-            */
+            //updates the data on the driver hub while the robot is in motion
             while (opModeIsActive() && (runtime.seconds() < timeout) && (robot.leftFront.isBusy()
                     || robot.leftBack.isBusy() || robot.rightFront.isBusy() || robot.rightBack.isBusy()))
             {
 
-                // Display it for the driver.
+                // Display data to see if it is running smoothly
                 telemetry.addData("Running to", "%7d, %7d, %7d, %7d", leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget);
                 telemetry.addData("Currently at", "%7d, %7d, %7d, %7d", robot.leftFront.getCurrentPosition(), robot.leftBack.getCurrentPosition(), robot.rightFront.getCurrentPosition(), robot.rightBack.getCurrentPosition());
+                telemetry.addData("Inches Traveled", "%7d, %7d, %7d, %7d", robot.leftFront.getCurrentPosition()/ OurBot.COUNTS_PER_INCH, robot.leftBack.getCurrentPosition()/ OurBot.COUNTS_PER_INCH, robot.rightFront.getCurrentPosition()/ OurBot.COUNTS_PER_INCH, robot.rightBack.getCurrentPosition()/ OurBot.COUNTS_PER_INCH  );
                 telemetry.update();
             }
 
@@ -122,17 +104,10 @@ public class BaseAuton extends LinearOpMode {
             robot.leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         }
 
 
 
 
     }
-
-
-
-
-
-
 }
