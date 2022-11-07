@@ -42,7 +42,7 @@ public class BaseAuton extends LinearOpMode {
 
 
     //uses speed and the amount we want to move each side by to move robot
-    protected void encoderDrive(double power, double leftInches, double rightInches, double timeout)
+    protected void encoderDrive(double power, double leftFrontInches, double leftBackInches, double rightFrontInches, double rightBackInches, double timeout)
     {
 
         //set up variables
@@ -67,10 +67,10 @@ public class BaseAuton extends LinearOpMode {
 
 
             // Determine new target position, and pass to motor controller
-            leftFrontTarget = leftFrontStart + (int) (leftInches * OurBot.COUNTS_PER_INCH);
-            leftBackTarget = leftBackStart + (int) (leftInches * OurBot.COUNTS_PER_INCH);
-            rightFrontTarget = rightFrontStart + (int) (rightInches * OurBot.COUNTS_PER_INCH);
-            rightBackTarget = rightBackStart + (int) (rightInches * OurBot.COUNTS_PER_INCH);
+            leftFrontTarget = leftFrontStart + (int) (leftFrontInches * OurBot.COUNTS_PER_INCH);
+            leftBackTarget = leftBackStart + (int) (leftBackInches * OurBot.COUNTS_PER_INCH);
+            rightFrontTarget = rightFrontStart + (int) (rightFrontInches * OurBot.COUNTS_PER_INCH);
+            rightBackTarget = rightBackStart + (int) (rightBackInches * OurBot.COUNTS_PER_INCH);
 
             //set the robot's new position that it has to get to
             robot.leftFront.setTargetPosition(leftFrontTarget);

@@ -51,7 +51,10 @@ public class OurBot
      * Notice that they are weird numbers, despite the gearboxes having integer ratios listed on them
      * ALWAYS check the gearbox datasheet for the true gear ratios, just in case
      * */
-    public static final double DRIVE_GEAR_REDUCTION = 2.89 * 3.61 * 5.23;
+
+    //test 7 or 12
+    public static final double DRIVE_GEAR_REDUCTION = 2.89 * 3.61;
+    //
     /** Wheel diameter in inches, try to be as precise as possible */
     public static final double WHEEL_DIAMETER_INCHES = 75 / 25.4;
     /**

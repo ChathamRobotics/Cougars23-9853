@@ -18,20 +18,29 @@ public class MainDrive extends LinearOpMode{
     private final OurBot robot = new OurBot();
     private final double basePower = 0.3;
 @Override
-     public void runOpMode() {
-         double power = basePower;
-         double lowPower = basePower - 0.2;
-         double highPower = basePower + 0.2;
-         telemetry.addData("Status", "Initialized");
-         telemetry.update();
 
-         // Let OurRobot do the heavy lifting of getting and initializing the hardware
-         robot.init(hardwareMap);
+     public void runOpMode() {
+
+        //set initial variables
+        double power = basePower;
+        double lowPower = basePower - 0.2;
+        double highPower = basePower + 0.2;
+        String orientation = "Forwards";
+        boolean backwards = false;
+
+        //add initial message
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        // Let OurRobot do the heavy lifting of getting and initializing the hardware
+        robot.init(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         while(opModeIsActive()) {
+
+            //sets power
             if (gamepad1.dpad_down) {
                 if (power == basePower) {
                     power = lowPower;
@@ -39,53 +48,118 @@ public class MainDrive extends LinearOpMode{
                     power = basePower;
                 }
             }
-            if (gamepad1.dpad_up) {
+            else if (gamepad1.dpad_up) {
                 if (power == basePower) {
                     power = highPower;
                 } else {
                     power = basePower;
                 }
             }
+
+
+            //changes driver POV - if robot is backwards, sets controls to account for that
+            if(gamepad1.dpad_right) {
+                backwards = false;
+            }else if(gamepad1.dpad_left)
+            {
+                backwards = true;
+            }
+
+            //gets input from controllers to configure which power to use
             double drive = -(gamepad1.left_stick_y);
             double turn = gamepad1.right_stick_x;
+
+            //sets power for normal drive
             double leftPower = Range.clip(drive + turn, -1, 1) * power;
             double rightPower = Range.clip(drive - turn, -1, 1) * power;
+
+            //gets values for triggers
             double rightTrigger = gamepad1.right_trigger;
             double leftTrigger = gamepad1.left_trigger;
 
             // Strafe right
             if (rightTrigger > 0) {
 
-                // Left wheels going out
-                // Light wheels going in
-                robot.leftFront.setPower(power * 1);
-                robot.leftBack.setPower(-(power * 1));
-                robot.rightFront.setPower(-(power * 1));
-                robot.rightBack.setPower(power * 1);
+
+
+                //if robot is backwards
+                if(backwards)
+                {
+                    robot.rightBack.setPower(-(power * rightTrigger));
+                    robot.rightFront.setPower(power * rightTrigger);
+                    robot.leftBack.setPower(power * rightTrigger);
+                    robot.leftFront.setPower(-(power * rightTrigger));
+
+                }else{
+                    //if robot is normal orientation
+                    // Left wheels going out
+                    // Right wheels going in
+                    robot.leftFront.setPower(power * rightTrigger);
+                    robot.leftBack.setPower(-(power * rightTrigger));
+                    robot.rightFront.setPower(-(power * rightTrigger));
+                    robot.rightBack.setPower(power * rightTrigger);
+
+                }
+
 
 
             }
             // Strafe left
             else if (leftTrigger > 0) {
-                // Left wheels going in
-                // Right wheels going out
-                robot.leftFront.setPower(-(power * 1));
-                robot.leftBack.setPower(power * 1);
-                robot.rightFront.setPower(power * 1);
-                robot.rightBack.setPower(-(power * 1));
+
+
+
+                //if robot is backwards
+                if(backwards)
+                {
+                    robot.rightBack.setPower(power * leftTrigger);
+                    robot.rightFront.setPower(-(power * leftTrigger));
+                    robot.leftBack.setPower(-(power * leftTrigger));
+                    robot.leftFront.setPower(power * leftTrigger);
+                }else{
+                    //if robot is straight
+                    // Left wheels going in
+                    // Right wheels going out
+                    robot.leftFront.setPower(-(power * leftTrigger));
+                    robot.leftBack.setPower(power * leftTrigger);
+                    robot.rightFront.setPower(power * leftTrigger);
+                    robot.rightBack.setPower(-(power * leftTrigger));
+
+                }
 
             } else {
-                // Sets power for main drive
-                robot.leftFront.setPower(leftPower);
-                robot.leftBack.setPower(leftPower);
-                robot.rightFront.setPower(rightPower);
-                robot.rightBack.setPower(rightPower);
+
+
+
+                //if robot is backwards
+                if(backwards)
+                {
+                    robot.leftFront.setPower(-rightPower);
+                    robot.leftBack.setPower(-rightPower);
+                    robot.rightFront.setPower(-leftPower);
+                    robot.rightBack.setPower(-leftPower);
+                }else{
+                    // Sets power for main drive
+                    //if robot is forward
+                    robot.leftFront.setPower(leftPower);
+                    robot.leftBack.setPower(leftPower);
+                    robot.rightFront.setPower(rightPower);
+                    robot.rightBack.setPower(rightPower);
+
+                }
 
             }
 
 
             // Updates telemetry
+            if(backwards)
+            {
+                orientation = "backwards";
+            }else{
+                orientation = "forwards";
+            }
             telemetry.addData("Main Power", power);
+            telemetry.addData("Orientation", orientation  );
             telemetry.addData("Left Power", leftPower);
             telemetry.addData("Right Power", rightPower);
             telemetry.addData("Right Stick x", gamepad1.right_stick_x);
