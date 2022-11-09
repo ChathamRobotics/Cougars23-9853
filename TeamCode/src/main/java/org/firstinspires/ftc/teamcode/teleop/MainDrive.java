@@ -25,8 +25,8 @@ public class MainDrive extends LinearOpMode{
         double power = basePower;
         double lowPower = basePower - 0.2;
         double highPower = basePower + 0.2;
-        String orientation = "Forwards";
-        boolean backwards = false;
+    String orientation;
+    boolean backwards = false;
 
         //add initial message
         telemetry.addData("Status", "Initialized");
@@ -67,6 +67,7 @@ public class MainDrive extends LinearOpMode{
 
             //gets input from controllers to configure which power to use
             double drive = -(gamepad1.left_stick_y);
+            double driveX = gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
             //sets power for normal drive
@@ -132,20 +133,40 @@ public class MainDrive extends LinearOpMode{
 
 
                 //if robot is backwards
-                if(backwards)
-                {
+                if (backwards) {
                     robot.leftFront.setPower(-rightPower);
                     robot.leftBack.setPower(-rightPower);
                     robot.rightFront.setPower(-leftPower);
                     robot.rightBack.setPower(-leftPower);
-                }else{
-                    // Sets power for main drive
-                    //if robot is forward
-                    robot.leftFront.setPower(leftPower);
-                    robot.leftBack.setPower(leftPower);
-                    robot.rightFront.setPower(rightPower);
-                    robot.rightBack.setPower(rightPower);
-
+                } else {
+                    if ((driveX <= -0.4) && (drive < 0)) {
+                        robot.leftFront.setPower(0);
+                        robot.leftBack.setPower(leftPower);
+                        robot.rightFront.setPower(rightPower);
+                        robot.rightBack.setPower(0);
+                    } else if ((driveX <= -0.4) && (drive > 0)) {
+                        robot.leftFront.setPower(-leftPower);
+                        robot.leftBack.setPower(0);
+                        robot.rightFront.setPower(0);
+                        robot.rightBack.setPower(-rightPower);
+                    } else if ((driveX >= 0.4) && (drive < 0)) {
+                        robot.leftFront.setPower(leftPower);
+                        robot.leftBack.setPower(0);
+                        robot.rightFront.setPower(0);
+                        robot.rightBack.setPower(rightPower);
+                    } else if ((driveX >= 0.4) && (drive > 0)) {
+                        robot.leftFront.setPower(0);
+                        robot.leftBack.setPower(-leftPower);
+                        robot.rightFront.setPower(-rightPower);
+                        robot.rightBack.setPower(0);
+                    } else {
+                        // Sets power for main drive
+                        //if robot is forward
+                        robot.leftFront.setPower(leftPower);
+                        robot.leftBack.setPower(leftPower);
+                        robot.rightFront.setPower(rightPower);
+                        robot.rightBack.setPower(rightPower);
+                    }
                 }
 
             }
