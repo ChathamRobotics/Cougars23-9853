@@ -26,7 +26,7 @@ public class BasicAuton extends BaseAuton{
         //wait for driver to press play
         waitForStart();
 
-        encoderDrive(0.3, 20, 20, 20, 20, 5);
+        encoderDrive(0.3, 24, 24, 24, 24, 5);
 
 
 

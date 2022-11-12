@@ -55,19 +55,32 @@ public class MotorTest extends LinearOpMode {
         while(opModeIsActive())
         {
 
-
-            if(gamepad1.dpad_up)
+            //sets which motor to run
+            if(gamepad1.triangle)
             {
-                index = (index + 1)%4;
-
+                index = 0;
+            }else if(gamepad1.square)
+            {
+                index = 1;
+            }else if(gamepad1.circle)
+            {
+                index = 2;
+            }else if(gamepad1.cross){
+                index = 3;
             }
 
+
+
+            //assigns which motor to run
             motors[index].setPower(gamepad1.left_stick_y);
 
 
-            //updates control hub
+            //updates driver hub
             telemetry.addData("Motor #", index);
             telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
+            telemetry.addData("Left Stick X", gamepad1.left_stick_x);
+            telemetry.addData("Right Stick Y", gamepad1.right_stick_y);
+            telemetry.addData("Right Stick X", gamepad1.right_stick_x);
             telemetry.update();
 
 
