@@ -74,11 +74,11 @@ public class OurBot
     public DcMotor leftBack = null;
     public DcMotor rightFront = null;
     public DcMotor rightBack = null;
-    public DcMotor arm = null;
-    public DcMotor intake = null;
+    public Servo intake = null;
 
-    public void init(HardwareMap hwMap)
-    {
+    public CRServo arm = null;
+
+    public void init(HardwareMap hwMap) {
          /*
          leftBack = 2
          leftFront = 3
@@ -91,16 +91,14 @@ public class OurBot
         leftBack = hwMap.get(DcMotor.class, "leftBack");
         rightFront = hwMap.get(DcMotor.class, "rightFront");
         rightBack = hwMap.get(DcMotor.class, "rightBack");
-        //arm = hwMap.get(DcMotor.class, "arm");
-        //intake = hwMap.get(DcMotor.class, "intake");
+        arm = hwMap.get(CRServo.class, "arm");
+        intake = hwMap.get(Servo.class, "intake");
 
         //Initialize motor direction, reverse so positive motor power is forward
         leftFront.setDirection(Direction.REVERSE);
         leftBack.setDirection(Direction.REVERSE);
         rightFront.setDirection(Direction.REVERSE);
         rightBack.setDirection(Direction.REVERSE);
-        //arm.setDirection(Direction.FORWARD);
-        //intake.setDirection(Direction.FORWARD);
 
 
         //Set all motors to 0 power
@@ -108,8 +106,6 @@ public class OurBot
         leftBack.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
-        //arm.setPower(0);
-        //intake.setPower(0);
 
 
         //Reset all encoders
@@ -117,16 +113,12 @@ public class OurBot
         leftBack.setMode(RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        //arm.setMode((RunMode.STOP_AND_RESET_ENCODER));
-        //intake.setMode((RunMode.STOP_AND_RESET_ENCODER));
 
         //Set motors to run with encoder
         leftFront.setMode(RunMode.RUN_USING_ENCODER);
         leftBack.setMode(RunMode.RUN_USING_ENCODER);
         rightFront.setMode(RunMode.RUN_USING_ENCODER);
         rightBack.setMode(RunMode.RUN_USING_ENCODER);
-        //arm.setMode(RunMode.RUN_USING_ENCODER);
-        //intake.setMode(RunMode.RUN_USING_ENCODER);
 
 
         //stops motors when 0 power, more precision
@@ -134,7 +126,5 @@ public class OurBot
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }
