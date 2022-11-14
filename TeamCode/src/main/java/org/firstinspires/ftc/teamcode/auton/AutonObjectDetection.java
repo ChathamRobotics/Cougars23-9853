@@ -158,7 +158,7 @@ public class AutonObjectDetection extends LinearOpMode {
             {
                 telemetry.addData("Do something for PANEL", "stuff");
             }
-            telemetry.addData("Object", recognition.getLabel());
+            //telemetry.addData("Object", recognition.getLabel());
             telemetry.update();
             sleep(5000);
 //            while (opModeIsActive()) {

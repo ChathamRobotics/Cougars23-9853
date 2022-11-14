@@ -130,8 +130,6 @@ public class MainDrive extends LinearOpMode{
 
             } else {
 
-
-
                 //if robot is backwards
                 if (backwards) {
                     robot.leftFront.setPower(-rightPower);
@@ -139,27 +137,6 @@ public class MainDrive extends LinearOpMode{
                     robot.rightFront.setPower(-leftPower);
                     robot.rightBack.setPower(-leftPower);
                 } else {
-                    if ((driveX <= -0.4) && (drive < 0)) {
-                        robot.leftFront.setPower(0);
-                        robot.leftBack.setPower(leftPower);
-                        robot.rightFront.setPower(rightPower);
-                        robot.rightBack.setPower(0);
-                    } else if ((driveX <= -0.4) && (drive > 0)) {
-                        robot.leftFront.setPower(-leftPower);
-                        robot.leftBack.setPower(0);
-                        robot.rightFront.setPower(0);
-                        robot.rightBack.setPower(-rightPower);
-                    } else if ((driveX >= 0.4) && (drive < 0)) {
-                        robot.leftFront.setPower(leftPower);
-                        robot.leftBack.setPower(0);
-                        robot.rightFront.setPower(0);
-                        robot.rightBack.setPower(rightPower);
-                    } else if ((driveX >= 0.4) && (drive > 0)) {
-                        robot.leftFront.setPower(0);
-                        robot.leftBack.setPower(-leftPower);
-                        robot.rightFront.setPower(-rightPower);
-                        robot.rightBack.setPower(0);
-                    } else {
                         // Sets power for main drive
                         //if robot is forward
                         robot.leftFront.setPower(leftPower);
@@ -167,7 +144,7 @@ public class MainDrive extends LinearOpMode{
                         robot.rightFront.setPower(rightPower);
                         robot.rightBack.setPower(rightPower);
                     }
-                }
+
 
             }
 
