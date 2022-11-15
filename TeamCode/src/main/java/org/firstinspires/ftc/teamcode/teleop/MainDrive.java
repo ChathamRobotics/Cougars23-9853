@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.OurBot;
 public class MainDrive extends LinearOpMode{
     private final OurBot robot = new OurBot();
     private final double basePower = 0.3;
-    private final double intakePower = 0.2;
 
     @Override
 
@@ -67,7 +66,6 @@ public class MainDrive extends LinearOpMode{
 
             //gets input from controllers to configure which power to use
             double drive = -(gamepad1.left_stick_y);
-            double driveX = gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
             //sets power for normal drive
@@ -148,7 +146,14 @@ public class MainDrive extends LinearOpMode{
             }
 
             double rightTrigger2 = gamepad2.right_trigger;
-            double leftTrigger2 = gamepad2.left_trigger;
+            double rise = -(gamepad2.left_stick_y);
+            double armPower = Range.clip(rise + 0, -1, 1) * power;
+            robot.arm.setPower(armPower);
+            if (rightTrigger2 > 0) {
+                robot.intake.setPosition(1);
+            } else {
+                robot.intake.setPosition(0);
+            }
 
 
             telemetry.addData("Main Power", power);

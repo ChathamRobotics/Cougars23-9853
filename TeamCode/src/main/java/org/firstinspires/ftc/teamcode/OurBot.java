@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
@@ -75,8 +74,7 @@ public class OurBot
     public DcMotor rightFront = null;
     public DcMotor rightBack = null;
     public Servo intake = null;
-
-    public CRServo arm = null;
+    public DcMotor arm = null;
 
     public void init(HardwareMap hwMap) {
          /*
@@ -91,7 +89,7 @@ public class OurBot
         leftBack = hwMap.get(DcMotor.class, "leftBack");
         rightFront = hwMap.get(DcMotor.class, "rightFront");
         rightBack = hwMap.get(DcMotor.class, "rightBack");
-        arm = hwMap.get(CRServo.class, "arm");
+        arm = hwMap.get(DcMotor.class, "arm");
         intake = hwMap.get(Servo.class, "intake");
 
         //Initialize motor direction, reverse so positive motor power is forward
@@ -99,6 +97,7 @@ public class OurBot
         leftBack.setDirection(Direction.REVERSE);
         rightFront.setDirection(Direction.REVERSE);
         rightBack.setDirection(Direction.REVERSE);
+        arm.setDirection(Direction.REVERSE);
 
 
         //Set all motors to 0 power
@@ -106,6 +105,7 @@ public class OurBot
         leftBack.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
+        arm.setPower(0);
 
 
         //Reset all encoders
@@ -113,12 +113,14 @@ public class OurBot
         leftBack.setMode(RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(RunMode.STOP_AND_RESET_ENCODER);
 
         //Set motors to run with encoder
         leftFront.setMode(RunMode.RUN_USING_ENCODER);
         leftBack.setMode(RunMode.RUN_USING_ENCODER);
         rightFront.setMode(RunMode.RUN_USING_ENCODER);
         rightBack.setMode(RunMode.RUN_USING_ENCODER);
+        arm.setMode(RunMode.RUN_USING_ENCODER);
 
 
         //stops motors when 0 power, more precision
@@ -126,5 +128,6 @@ public class OurBot
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }
