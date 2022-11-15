@@ -41,6 +41,10 @@ public class MainDrive extends LinearOpMode{
 
         while (opModeIsActive()) {
 
+            /* ----------------------
+               | Gamepad 1 Controls |
+               ---------------------- */
+
             //sets power
             if (gamepad1.dpad_down) {
                 if (power == basePower) {
@@ -144,6 +148,10 @@ public class MainDrive extends LinearOpMode{
             } else {
                 orientation = "forwards";
             }
+
+            /* ----------------------
+               | Gamepad 2 Controls |
+               ---------------------- */
 
             double rightTrigger2 = gamepad2.right_trigger;
             double rise = -(gamepad2.left_stick_y);
