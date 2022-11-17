@@ -40,6 +40,10 @@ public class MainDrive extends LinearOpMode{
 
         while(opModeIsActive()) {
 
+
+            /*
+            GAMEPAD 1 CONTROLS
+             */
             //sets power
             if (gamepad1.dpad_down) {
                 if (power == basePower) {
@@ -146,6 +150,24 @@ public class MainDrive extends LinearOpMode{
                     }
 
 
+            }
+
+
+            /*
+            GAMEPAD 2 CONTROLS
+             */
+
+
+            //controls arm
+            robot.arm.setPower(-gamepad2.left_stick_y * basePower);
+
+            //controls claw
+            if(gamepad2.right_trigger > 0)
+            {
+                //open claw
+            }else if (gamepad2.left_trigger > 0)
+            {
+                //close claw
             }
 
 
