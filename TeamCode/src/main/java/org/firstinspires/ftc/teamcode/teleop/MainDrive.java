@@ -171,19 +171,9 @@ public class MainDrive extends LinearOpMode{
                 orientation = "forwards";
             }
 
-            /* ----------------------
-               | Gamepad 2 Controls |
-               ---------------------- */
 
-            double rightTrigger2 = gamepad2.right_trigger;
-            double rise = -(gamepad2.left_stick_y);
-            double armPower = Range.clip(rise + 0, -1, 1) * power;
-            robot.arm.setPower(armPower);
-            if (rightTrigger2 > 0) {
-                robot.intake.setPosition(1);
-            } else {
-                robot.intake.setPosition(0);
-            }
+
+
 
 
             telemetry.addData("Main Power", power);
