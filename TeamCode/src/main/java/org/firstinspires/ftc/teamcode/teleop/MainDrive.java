@@ -180,7 +180,7 @@ public class MainDrive extends LinearOpMode{
             telemetry.addData("Orientation", orientation);
             telemetry.addData("Left Power", leftPower);
             telemetry.addData("Right Power", rightPower);
-            telemetry.addData("Right Stick x", gamepad1.right_stick_x);
+            telemetry.addData("Claw Servo position", robot.claw.getPosition());
             telemetry.update();
         }
     }
