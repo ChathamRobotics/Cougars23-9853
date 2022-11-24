@@ -50,9 +50,9 @@ make the code for the robot to actually move to the spot
 get started on the custom model
 
  */
-@Autonomous(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@Autonomous(name = "TensorFlow Auton")
 
-public class AutonObjectDetection extends LinearOpMode {
+public class AutonObjectDetection extends BaseAuton {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -101,7 +101,9 @@ public class AutonObjectDetection extends LinearOpMode {
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
+        super.runOpMode();
         Recognition recognition = null;
+        robot.claw.setPosition(0.35833);
         initVuforia();
         initTfod();
 
@@ -127,6 +129,7 @@ public class AutonObjectDetection extends LinearOpMode {
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
+        robot.claw.setPosition(0.53556);
 
         if (opModeIsActive()) {
 
@@ -144,48 +147,31 @@ public class AutonObjectDetection extends LinearOpMode {
             //if the object detected is the bolt (1)
             if(recognition.getLabel().equals("1 Bolt"))
             {
+                double strafeInches = 24;
+                encoderDrive(0.5, -strafeInches, strafeInches, strafeInches, -strafeInches, 5);
+                encoderDrive(0.5, 24, 24, 24, 24, 5);
                 telemetry.addData("Do something for BOLT", "stuff");
             }
 
             //if the object detected is the bulb (2)
             else if(recognition.getLabel().equals("2 Bulb"))
             {
+                encoderDrive(0.5, 24, 24, 24, 24, 5);
                 telemetry.addData("Do something for BULB", "stuff");
             }
 
             //if the object detected is the panel (3)
             else if(recognition.getLabel().equals("3 Panel"))
             {
+                double strafeInches = 24;
+                encoderDrive(0.5, strafeInches, -strafeInches, -strafeInches, strafeInches, 5);
+                encoderDrive(0.5, 24, 24, 24, 24, 5);
                 telemetry.addData("Do something for PANEL", "stuff");
             }
             //telemetry.addData("Object", recognition.getLabel());
             telemetry.update();
             sleep(5000);
-//            while (opModeIsActive()) {
-//                if (tfod != null) {
-//                    // getUpdatedRecognitions() will return null if no new information is available since
-//                    // the last time that call was made.
-//                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-//                    if (updatedRecognitions != null) {
-//                        telemetry.addData("# Objects Detected", updatedRecognitions.size());
 //
-//                        // step through the list of recognitions and display image position/size information for each one
-//                        // Note: "Image number" refers to the randomized image orientation/number
-//                        for (Recognition recognition : updatedRecognitions) {
-//                            double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
-//                            double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-//                            double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
-//                            double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
-//
-//                            telemetry.addData(""," ");
-//                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
-//                            telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
-//                            telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
-//                        }
-//                        telemetry.update();
-//                    }
-//                }
-//            }
         }
     }
 

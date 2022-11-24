@@ -16,14 +16,15 @@ import org.firstinspires.ftc.teamcode.OurBot;
 @TeleOp(name="Main Drive")
 public class MainDrive extends LinearOpMode{
     private final OurBot robot = new OurBot();
-    private final double basePower = 0.3;
+    private final double basePower = 0.5;
 
     @Override
 
     public void runOpMode() {
 
         //set initial variables
-        double power = basePower;
+        double drivePower = basePower;
+        double armPower = basePower;
         double lowPower = basePower - 0.2;
         double highPower = basePower + 0.2;
         String orientation;
@@ -50,19 +51,7 @@ public class MainDrive extends LinearOpMode{
             GAMEPAD 1 CONTROLS
              */
             //sets power
-            if (gamepad1.dpad_down) {
-                if (power == basePower) {
-                    power = lowPower;
-                } else {
-                    power = basePower;
-                }
-            } else if (gamepad1.dpad_up) {
-                if (power == basePower) {
-                    power = highPower;
-                } else {
-                    power = basePower;
-                }
-            }
+
 
 
             //changes driver POV - if robot is backwards, sets controls to account for that
@@ -77,8 +66,8 @@ public class MainDrive extends LinearOpMode{
             double turn = gamepad1.right_stick_x;
 
             //sets power for normal drive
-            double leftPower = Range.clip(drive + turn, -1, 1) * power;
-            double rightPower = Range.clip(drive - turn, -1, 1) * power;
+            double leftPower = Range.clip(drive + turn, -1, 1) * drivePower;
+            double rightPower = Range.clip(drive - turn, -1, 1) * drivePower;
 
             //gets values for triggers
             double rightTrigger = gamepad1.right_trigger;
@@ -89,19 +78,19 @@ public class MainDrive extends LinearOpMode{
 
                 //if robot is backwards
                 if (backwards) {
-                    robot.rightBack.setPower(-(power * rightTrigger));
-                    robot.rightFront.setPower(power * rightTrigger);
-                    robot.leftBack.setPower(power * rightTrigger);
-                    robot.leftFront.setPower(-(power * rightTrigger));
+                    robot.rightBack.setPower(-(drivePower * rightTrigger));
+                    robot.rightFront.setPower(drivePower * rightTrigger);
+                    robot.leftBack.setPower(drivePower * rightTrigger);
+                    robot.leftFront.setPower(-(drivePower * rightTrigger));
 
                 } else {
                     //if robot is normal orientation
                     // Left wheels going out
                     // Right wheels going in
-                    robot.leftFront.setPower(power * rightTrigger);
-                    robot.leftBack.setPower(-(power * rightTrigger));
-                    robot.rightFront.setPower(-(power * rightTrigger));
-                    robot.rightBack.setPower(power * rightTrigger);
+                    robot.leftFront.setPower(drivePower * rightTrigger);
+                    robot.leftBack.setPower(-(drivePower * rightTrigger));
+                    robot.rightFront.setPower(-(drivePower * rightTrigger));
+                    robot.rightBack.setPower(drivePower * rightTrigger);
                 }
 
 
@@ -111,18 +100,18 @@ public class MainDrive extends LinearOpMode{
 
                 //if robot is backwards
                 if (backwards) {
-                    robot.rightBack.setPower(power * leftTrigger);
-                    robot.rightFront.setPower(-(power * leftTrigger));
-                    robot.leftBack.setPower(-(power * leftTrigger));
-                    robot.leftFront.setPower(power * leftTrigger);
+                    robot.rightBack.setPower(drivePower * leftTrigger);
+                    robot.rightFront.setPower(-(drivePower * leftTrigger));
+                    robot.leftBack.setPower(-(drivePower * leftTrigger));
+                    robot.leftFront.setPower(drivePower * leftTrigger);
                 } else {
                     //if robot is straight
                     // Left wheels going in
                     // Right wheels going out
-                    robot.leftFront.setPower(-(power * leftTrigger));
-                    robot.leftBack.setPower(power * leftTrigger);
-                    robot.rightFront.setPower(power * leftTrigger);
-                    robot.rightBack.setPower(-(power * leftTrigger));
+                    robot.leftFront.setPower(-(drivePower * leftTrigger));
+                    robot.leftBack.setPower(drivePower * leftTrigger);
+                    robot.rightFront.setPower(drivePower * leftTrigger);
+                    robot.rightBack.setPower(-(drivePower * leftTrigger));
 
                 }
 
@@ -152,15 +141,27 @@ public class MainDrive extends LinearOpMode{
 
 
             //controls arm
+
+           /* if(gamepad2.left_stick_y > 0)
+            {
+                robot.arm.setPower(-gamepad2.left_stick_y * (basePower - 0.2));
+
+            }else if(gamepad2.left_stick_y < 0)
+            {
+                robot.arm.setPower(-gamepad2.left_stick_y * basePower);
+            }*/
+
             robot.arm.setPower(-gamepad2.left_stick_y * basePower);
 
             //controls claw
             if(gamepad2.right_trigger > 0)
             {
-                //open claw
+                //closed position = 0.82
+                robot.claw.setPosition(0.82);
             }else if (gamepad2.left_trigger > 0)
             {
-                //close claw
+                //open position = 0.53556
+                robot.claw.setPosition(0.53556);
             }
 
 
@@ -176,7 +177,7 @@ public class MainDrive extends LinearOpMode{
 
 
 
-            telemetry.addData("Main Power", power);
+            telemetry.addData("Main Drive Power", drivePower);
             telemetry.addData("Orientation", orientation);
             telemetry.addData("Left Power", leftPower);
             telemetry.addData("Right Power", rightPower);

@@ -104,6 +104,14 @@ public class BaseAuton extends LinearOpMode {
             while (opModeIsActive() && (runtime.seconds() < timeout) && (robot.leftFront.isBusy()
                     || robot.leftBack.isBusy() || robot.rightFront.isBusy() || robot.rightBack.isBusy()))
             {
+                double leftFrontScale = Math.max(1 - ((double)robot.leftFront.getCurrentPosition() - leftFrontStart) / (leftFrontTarget - leftFrontStart), 0.25);
+                double leftBackScale = Math.max(1 - ((double)robot.leftBack.getCurrentPosition() - leftBackStart) / (leftBackTarget - leftBackStart), 0.25);
+                double rightFrontScale = Math.max(1 - ((double)robot.rightFront.getCurrentPosition() - rightFrontStart) / (rightFrontTarget - rightFrontStart), 0.25);
+                double rightBackScale = Math.max(1 - ((double)robot.rightBack.getCurrentPosition() - rightBackStart) / (rightBackTarget - rightBackStart), 0.25);
+                robot.leftFront.setPower(power * leftFrontScale);
+                robot.leftBack.setPower(power * leftBackScale);
+                robot.rightFront.setPower(power * rightFrontScale);
+                robot.rightBack.setPower(power * rightBackScale);
 
                 // Display it for the driver.
                 telemetry.addData("Running to", "%7d, %7d, %7d, %7d", leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget);
