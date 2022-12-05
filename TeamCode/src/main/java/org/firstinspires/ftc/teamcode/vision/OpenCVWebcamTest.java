@@ -4,8 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -176,9 +178,35 @@ public class OpenCVWebcamTest extends LinearOpMode
          * constantly allocating and freeing large chunks of memory.
          */
 
+        Point topLeft = new Point(100, 100);
+        Point bottomRight = new Point(150, 150);
+
+
+        Mat region;
+
+        private volatile int average1;
+        private volatile int average2;
+        private volatile int average3;
+
+
+
+
+
+
+
         @Override
         public Mat processFrame(Mat input)
         {
+
+            //get the region we want
+            region = input.submat(new Rect(topLeft, bottomRight) );
+
+
+            //compute averages for the channels to test
+            average1 = (int) Core.mean(region).val[0];
+            average2 = (int) Core.mean(region).val[1];
+            average3 = (int) Core.mean(region).val[2];
+
             /*
              * IMPORTANT NOTE: the input Mat that is passed in as a parameter to this method
              * will only dereference to the same image for the duration of this particular
@@ -188,16 +216,12 @@ public class OpenCVWebcamTest extends LinearOpMode
              */
 
             /*
-             * Draw a simple box around the middle 1/2 of the entire frame
+             * Draw a simple box around the region
              */
             Imgproc.rectangle(
                     input,
-                    new Point(
-                            input.cols()/4,
-                            input.rows()/4),
-                    new Point(
-                            input.cols()*(3f/4f),
-                            input.rows()*(3f/4f)),
+                    topLeft,
+                    bottomRight,
                     new Scalar(0, 255, 0), 4);
 
             /**
@@ -234,6 +258,20 @@ public class OpenCVWebcamTest extends LinearOpMode
             {
                 webcam.resumeViewport();
             }
+        }
+        public int getAverage1()
+        {
+            return average1;
+        }
+
+        public int getAverage2()
+        {
+            return average2;
+        }
+
+        public int getAverage3()
+        {
+            return average3;
         }
     }
 }
