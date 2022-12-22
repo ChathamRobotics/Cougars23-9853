@@ -66,6 +66,8 @@ public class OurBot
      */
     public static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
+    public static final double COUNTS_PER_INCH_ARM = ((COUNTS_PER_MOTOR_REV * (3.61*3.61)) / (WHEEL_DIAMETER_INCHES * Math.PI));
+
     /*
     Sets up the home for the arm
      */
@@ -97,7 +99,7 @@ public class OurBot
         leftBack = hwMap.get(DcMotor.class, "leftBack");
         rightFront = hwMap.get(DcMotor.class, "rightFront");
         rightBack = hwMap.get(DcMotor.class, "rightBack");
-        //arm = hwMap.get(DcMotor.class, "arm");
+        arm = hwMap.get(DcMotor.class, "arm");
         claw = hwMap.get(Servo.class, "claw");
 
         //Initialize motor direction, reverse so positive motor power is forward
@@ -105,7 +107,7 @@ public class OurBot
         leftBack.setDirection(Direction.REVERSE);
         rightFront.setDirection(Direction.REVERSE);
         rightBack.setDirection(Direction.REVERSE);
-        //arm.setDirection(Direction.REVERSE);
+        arm.setDirection(Direction.REVERSE);
 
 
 
@@ -114,12 +116,12 @@ public class OurBot
         leftBack.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
-
+        arm.setPower(0);
         //use BNO055IMU sensor with encoders for precise position
         //use roll to control turns and such
         //get vuforia set up, then IMU with encoders, then combine them
 
-        //claw.setPosition(0.35833);
+        claw.setPosition(0.1);
 
 
 
@@ -130,7 +132,7 @@ public class OurBot
         leftBack.setMode(RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        //arm.setMode((RunMode.STOP_AND_RESET_ENCODER));
+        arm.setMode((RunMode.STOP_AND_RESET_ENCODER));
 
 
         //Set motors to run with encoder
@@ -138,7 +140,7 @@ public class OurBot
         leftBack.setMode(RunMode.RUN_USING_ENCODER);
         rightFront.setMode(RunMode.RUN_USING_ENCODER);
         rightBack.setMode(RunMode.RUN_USING_ENCODER);
-        //arm.setMode(RunMode.RUN_USING_ENCODER);
+        arm.setMode(RunMode.RUN_USING_ENCODER);
 
 
 
@@ -147,7 +149,7 @@ public class OurBot
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 }

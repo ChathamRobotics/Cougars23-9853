@@ -142,14 +142,7 @@ public class MainDrive extends LinearOpMode{
 
             //controls arm
 
-           /* if(gamepad2.left_stick_y > 0)
-            {
-                robot.arm.setPower(-gamepad2.left_stick_y * (basePower - 0.2));
 
-            }else if(gamepad2.left_stick_y < 0)
-            {
-                robot.arm.setPower(-gamepad2.left_stick_y * basePower);
-            }*/
 
             robot.arm.setPower(-gamepad2.left_stick_y * basePower);
 
@@ -157,11 +150,11 @@ public class MainDrive extends LinearOpMode{
             if(gamepad2.right_trigger > 0)
             {
                 //closed position = 0.82
-                robot.claw.setPosition(0.82);
+                robot.claw.setPosition(0.5);
             }else if (gamepad2.left_trigger > 0)
             {
                 //open position = 0.53556
-                robot.claw.setPosition(0.53556);
+                robot.claw.setPosition(0.25);
             }
 
 
@@ -182,6 +175,8 @@ public class MainDrive extends LinearOpMode{
             telemetry.addData("Left Power", leftPower);
             telemetry.addData("Right Power", rightPower);
             telemetry.addData("Claw Servo position", robot.claw.getPosition());
+            telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
+            telemetry.addData("Arm Power", -gamepad2.left_stick_y * basePower);
             telemetry.update();
         }
     }

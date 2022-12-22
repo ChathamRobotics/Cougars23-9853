@@ -1,9 +1,12 @@
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.OurBot;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -16,11 +19,18 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+
 @TeleOp
-public class OpenCVWebcamTest extends LinearOpMode
+public class BaseAutonOpenCVWebcam extends LinearOpMode
 {
     OpenCvWebcam webcam;
     SamplePipeline pipeline;
+
+    //init the robot and its motors/servos
+    OurBot robot = new OurBot();
+
+    //gets our run time in case we want to use time
+    public final ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode()
@@ -35,6 +45,7 @@ public class OpenCVWebcamTest extends LinearOpMode
          * the RC phone). If no camera monitor is desired, use the alternate
          * single-parameter constructor instead (commented out below)
          */
+        robot.init(hardwareMap);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
@@ -92,84 +103,165 @@ public class OpenCVWebcamTest extends LinearOpMode
             }
         });
 
-        telemetry.addLine("Waiting for start");
-        telemetry.update();
 
-        /*
-         * Wait for the user to press start on the Driver Station
-         */
-        waitForStart();
 
-        while (opModeIsActive())
+    }
+
+    //moves arm via encoders
+    protected void encoderLift(double power, double inchesTarget, double timeout)
+    {
+        int target;
+
+
+        if(opModeIsActive())
         {
-            /*
-             * Send some stats to the telemetry
-             */
-            telemetry.addData("Frame Count", webcam.getFrameCount());
-            telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
-            telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
-            telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
-            telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
-            telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
-            telemetry.addData("Channel 1 Average", pipeline.getAverage1() );
-            telemetry.addData("Channel 2 Average", pipeline.getAverage2());
-            telemetry.addData("Channel 3 Average", pipeline.getAverage3());
-            telemetry.update();
 
-            /*
-             * NOTE: stopping the stream from the camera early (before the end of the OpMode
-             * when it will be automatically stopped for you) *IS* supported. The "if" statement
-             * below will stop streaming from the camera when the "A" button on gamepad 1 is pressed.
-             */
-            if(gamepad1.a)
+            target = (int)(inchesTarget * OurBot.COUNTS_PER_INCH_ARM);
+
+            robot.arm.setTargetPosition(target);
+            robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            runtime.reset();
+
+            robot.arm.setPower(power);
+
+            while (opModeIsActive() && (runtime.seconds() < timeout) && (robot.arm.isBusy()))
             {
-                /*
-                 * IMPORTANT NOTE: calling stopStreaming() will indeed stop the stream of images
-                 * from the camera (and, by extension, stop calling your vision pipeline). HOWEVER,
-                 * if the reason you wish to stop the stream early is to switch use of the camera
-                 * over to, say, Vuforia or TFOD, you will also need to call closeCameraDevice()
-                 * (commented out below), because according to the Android Camera API documentation:
-                 *         "Your application should only have one Camera object active at a time for
-                 *          a particular hardware camera."
-                 *
-                 * NB: calling closeCameraDevice() will internally call stopStreaming() if applicable,
-                 * but it doesn't hurt to call it anyway, if for no other reason than clarity.
-                 *
-                 * NB2: if you are stopping the camera stream to simply save some processing power
-                 * (or battery power) for a short while when you do not need your vision pipeline,
-                 * it is recommended to NOT call closeCameraDevice() as you will then need to re-open
-                 * it the next time you wish to activate your vision pipeline, which can take a bit of
-                 * time. Of course, this comment is irrelevant in light of the use case described in
-                 * the above "important note".
-                 */
-                webcam.stopStreaming();
-                //webcam.closeCameraDevice();
+
+
+
+                // Display it for the driver.
+                telemetry.addData("Running to", "%7d", target);
+                telemetry.addData("Currently at", "%7d", robot.arm.getCurrentPosition());
+                telemetry.update();
             }
 
-            /*
-             * For the purposes of this sample, throttle ourselves to 10Hz loop to avoid burning
-             * excess CPU cycles for no reason. (By default, telemetry is only sent to the DS at 4Hz
-             * anyway). Of course in a real OpMode you will likely not want to do this.
-             */
-            sleep(100);
+            // Stop all motion once the loop ends (it reached target position)
+            robot.arm.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
         }
     }
 
-    /*
-     * An example image processing pipeline to be run upon receipt of each frame from the camera.
-     * Note that the processFrame() method is called serially from the frame worker thread -
-     * that is, a new camera frame will not come in while you're still processing a previous one.
-     * In other words, the processFrame() method will never be called multiple times simultaneously.
-     *
-     * However, the rendering of your processed image to the viewport is done in parallel to the
-     * frame worker thread. That is, the amount of time it takes to render the image to the
-     * viewport does NOT impact the amount of frames per second that your pipeline can process.
-     *
-     * IMPORTANT NOTE: this pipeline is NOT invoked on your OpMode thread. It is invoked on the
-     * frame worker thread. This should not be a problem in the vast majority of cases. However,
-     * if you're doing something weird where you do need it synchronized with your OpMode thread,
-     * then you will need to account for that accordingly.
-     */
+
+    //uses speed and the amount we want to move each side by to move robot
+    protected void encoderDrive(double power, double leftFrontInches, double leftBackInches, double rightFrontInches, double rightBackInches, double timeout, boolean scaled)
+    {
+
+        //set up variables
+        int leftFrontStart;
+        int leftBackStart;
+        int rightFrontStart;
+        int rightBackStart;
+
+        int leftFrontTarget;
+        int leftBackTarget;
+        int rightFrontTarget;
+        int rightBackTarget;
+
+        double leftFrontScale;
+        double leftBackScale;
+        double rightFrontScale;
+        double rightBackScale;
+
+
+        if(opModeIsActive())
+        {
+            //set starting variables
+            leftFrontStart = robot.leftFront.getCurrentPosition();
+            leftBackStart = robot.leftBack.getCurrentPosition();
+            rightFrontStart = robot.rightFront.getCurrentPosition();
+            rightBackStart = robot.rightBack.getCurrentPosition();
+
+
+
+            // Determine new target position, and pass to motor controller
+            leftFrontTarget = leftFrontStart + (int) (leftFrontInches * OurBot.COUNTS_PER_INCH);
+            leftBackTarget = leftBackStart + (int) (leftBackInches * OurBot.COUNTS_PER_INCH);
+            rightFrontTarget = rightFrontStart + (int) (rightFrontInches * OurBot.COUNTS_PER_INCH);
+            rightBackTarget = rightBackStart + (int) (rightBackInches * OurBot.COUNTS_PER_INCH);
+
+            //set the robot's new position that it has to get to
+            robot.leftFront.setTargetPosition(leftFrontTarget);
+            robot.leftBack.setTargetPosition(leftBackTarget);
+            robot.rightFront.setTargetPosition(rightFrontTarget);
+            robot.rightBack.setTargetPosition(rightBackTarget);
+
+            // Turn On RUN_TO_POSITION
+            robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            power = Math.abs(power);
+            robot.leftFront.setPower(power);
+            robot.leftBack.setPower(power);
+            robot.rightFront.setPower(power);
+            robot.rightBack.setPower(power);
+
+
+            /*
+
+            will keep updating telemetry data until:
+            1. opmode is ended by driver
+            2. move runs out of time originally set
+            3. the robot is in its target position
+
+            */
+            while (opModeIsActive() && (runtime.seconds() < timeout) && (robot.leftFront.isBusy()
+                    || robot.leftBack.isBusy() || robot.rightFront.isBusy() || robot.rightBack.isBusy()))
+            {
+                if(scaled)
+                {
+                    leftFrontScale = Math.max(1 - ((double)robot.leftFront.getCurrentPosition() - leftFrontStart) / (leftFrontTarget - leftFrontStart), 0.25);
+                    leftBackScale = Math.max(1 - ((double)robot.leftBack.getCurrentPosition() - leftBackStart) / (leftBackTarget - leftBackStart), 0.25);
+                    rightFrontScale = Math.max(1 - ((double)robot.rightFront.getCurrentPosition() - rightFrontStart) / (rightFrontTarget - rightFrontStart), 0.25);
+                    rightBackScale = Math.max(1 - ((double)robot.rightBack.getCurrentPosition() - rightBackStart) / (rightBackTarget - rightBackStart), 0.25);
+
+                }else{
+                    leftFrontScale = 1;
+                    leftBackScale = 1;
+                    rightFrontScale = 1;
+                    rightBackScale = 1;
+
+
+
+                }
+                robot.leftFront.setPower(power * leftFrontScale);
+                robot.leftBack.setPower(power * leftBackScale);
+                robot.rightFront.setPower(power * rightFrontScale);
+                robot.rightBack.setPower(power * rightBackScale);
+
+
+
+                // Display it for the driver.
+                telemetry.addData("Running to", "%7d, %7d, %7d, %7d", leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget);
+                telemetry.addData("Currently at", "%7d, %7d, %7d, %7d", robot.leftFront.getCurrentPosition(), robot.leftBack.getCurrentPosition(), robot.rightFront.getCurrentPosition(), robot.rightBack.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion once the loop ends (it reached target position)
+            robot.leftFront.setPower(0);
+            robot.leftBack.setPower(0);
+            robot.rightFront.setPower(0);
+            robot.rightBack.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+
+
+    }
+
     class SamplePipeline extends OpenCvPipeline
     {
         boolean viewportPaused;
@@ -183,15 +275,17 @@ public class OpenCVWebcamTest extends LinearOpMode
          * constantly allocating and freeing large chunks of memory.
          */
 
+
+
         Point topLeft = new Point(195, 100);
         Point bottomRight = new Point(215, 120);
 
 
         Mat region;
 
-        private volatile int average1;
-        private volatile int average2;
-        private volatile int average3;
+        private volatile int redAverage;
+        private volatile int greenAverage;
+        private volatile int blueAverage;
 
 
 
@@ -208,9 +302,9 @@ public class OpenCVWebcamTest extends LinearOpMode
 
 
             //compute averages for the channels to test
-            average1 = (int) Core.mean(region).val[0];
-            average2 = (int) Core.mean(region).val[1];
-            average3 = (int) Core.mean(region).val[2];
+            redAverage = (int) Core.mean(region).val[0];
+            greenAverage = (int) Core.mean(region).val[1];
+            blueAverage = (int) Core.mean(region).val[2];
 
             /*
              * IMPORTANT NOTE: the input Mat that is passed in as a parameter to this method
@@ -264,19 +358,19 @@ public class OpenCVWebcamTest extends LinearOpMode
                 webcam.resumeViewport();
             }
         }
-        public int getAverage1()
+        public int getRedAverage()
         {
-            return average1;
+            return redAverage;
         }
 
-        public int getAverage2()
+        public int getGreenAverage()
         {
-            return average2;
+            return greenAverage;
         }
 
-        public int getAverage3()
+        public int getBlueAverage()
         {
-            return average3;
+            return blueAverage;
         }
     }
 }
