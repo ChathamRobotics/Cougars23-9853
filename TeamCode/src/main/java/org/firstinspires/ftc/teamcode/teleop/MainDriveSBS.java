@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.OurBot;
 
-
+@Disabled
 @TeleOp(name = "Main Drive SBS")
 public class MainDriveSBS extends LinearOpMode {
     private final OurBot robot = new OurBot();
