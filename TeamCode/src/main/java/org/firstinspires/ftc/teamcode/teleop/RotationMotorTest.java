@@ -9,34 +9,40 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @TeleOp
 public class RotationMotorTest extends LinearOpMode {
-    public DcMotor leftRotation;
-    public DcMotor rightRotation;
+    public DcMotor rotation;
+    public DcMotor arm;
     public boolean dual = true;
 
     //1 = left motor ---- 2 = right motor
-    public int currentMotor = 1;
+    int rotationTarget;
+    int armTarget;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftRotation = hardwareMap.get(DcMotor.class, "leftRotation");
-        leftRotation.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftRotation.setPower(0);
-        leftRotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftRotation.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rotation = hardwareMap.get(DcMotor.class, "rotation");
+        rotation.setDirection(DcMotorSimple.Direction.FORWARD);
+        rotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rotationTarget = rotation.getCurrentPosition();
+        rotation.setTargetPosition(rotationTarget);
+        rotation.setPower(0.3);
 
 
-        rightRotation = hardwareMap.get(DcMotor.class, "rightRotation");
-        rightRotation.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightRotation.setPower(0);
-        rightRotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightRotation.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm = hardwareMap.get(DcMotor.class, "arm");
+        arm.setDirection(DcMotorSimple.Direction.FORWARD);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armTarget = arm.getTargetPosition();
+        arm.setTargetPosition(armTarget);
+        arm.setPower(0.3);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        telemetry.speak("you're bad");
-        telemetry.speak("hashtag one one two four eight for the win");
+
+
+
 
         waitForStart();
         while(opModeIsActive())
@@ -49,13 +55,7 @@ public class RotationMotorTest extends LinearOpMode {
                 dual = false;
             }
 
-            if(gamepad1.x)
-            {
-                currentMotor = 1;
-            }else if(gamepad1.b)
-            {
-                currentMotor = 2;
-            }
+
 
             /*if(dual)
             {
@@ -71,11 +71,16 @@ public class RotationMotorTest extends LinearOpMode {
                 }
             }*/
 
-            leftRotation.setPower(-gamepad1.left_stick_y*0.5);
-            rightRotation.setPower(-gamepad1.right_stick_y*0.5);
+            rotationTarget += -gamepad1.left_stick_y * 25;
+            armTarget += -gamepad1.right_stick_y * 25;
+            arm.setTargetPosition(armTarget);
+            rotation.setTargetPosition(rotationTarget);
 
-            telemetry.addData("Dual", dual );
-            telemetry.addData("Current Motor", currentMotor);
+            telemetry.addData("Rotation Motor Position", rotation.getCurrentPosition() );
+            telemetry.addData("Rotation Motor Target", rotationTarget);
+
+            telemetry.addData("Arm Motor Position", arm.getCurrentPosition());
+            telemetry.addData("Arm Motor Target", armTarget);
             telemetry.update();
 
 
