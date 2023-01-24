@@ -51,6 +51,7 @@ get started on the custom model
 
  */
 @Autonomous(name = "TensorFlow Auton")
+@Disabled
 
 public class AutonObjectDetection extends BaseAuton {
 

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.auton;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,6 +22,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 
 @TeleOp
+@Disabled
 public class BaseAutonOpenCVWebcam extends LinearOpMode
 {
     OpenCvWebcam webcam;
@@ -91,7 +93,7 @@ public class BaseAutonOpenCVWebcam extends LinearOpMode
                  * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
                  * away from the user.
                  */
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
             }
 
             @Override
@@ -277,8 +279,8 @@ public class BaseAutonOpenCVWebcam extends LinearOpMode
 
 
 
-        Point topLeft = new Point(195, 100);
-        Point bottomRight = new Point(215, 120);
+        Point topLeft = new Point(40, 180);
+        Point bottomRight = new Point(60, 205);
 
 
         Mat region;

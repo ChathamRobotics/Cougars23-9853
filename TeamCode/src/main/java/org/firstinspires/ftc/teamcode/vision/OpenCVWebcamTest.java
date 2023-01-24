@@ -80,7 +80,7 @@ public class OpenCVWebcamTest extends LinearOpMode
                  * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
                  * away from the user.
                  */
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
             }
 
             @Override
@@ -183,8 +183,8 @@ public class OpenCVWebcamTest extends LinearOpMode
          * constantly allocating and freeing large chunks of memory.
          */
 
-        Point topLeft = new Point(195, 100);
-        Point bottomRight = new Point(215, 120);
+        Point topLeft = new Point(40, 185);
+        Point bottomRight = new Point(60, 205);
 
 
         Mat region;

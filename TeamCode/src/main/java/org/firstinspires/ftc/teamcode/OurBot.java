@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -56,7 +57,7 @@ public class OurBot
 
     //test 7 or 12
     //usually use 2.89*3.61, but for some reason its too high so we manually adjusted it
-    public static final double DRIVE_GEAR_REDUCTION = 10.11;
+    public static final double DRIVE_GEAR_REDUCTION = 10;
     //
     /** Wheel diameter in inches, try to be as precise as possible */
     public static final double WHEEL_DIAMETER_INCHES = 75 / 25.4;
@@ -82,6 +83,8 @@ public class OurBot
     public DcMotor leftBack = null;
     public DcMotor rightFront = null;
     public DcMotor rightBack = null;
+    public DcMotor leftRotation = null;
+    public DcMotor rightRotation = null;
     public DcMotor arm = null;
     public Servo claw = null;
 
@@ -95,6 +98,8 @@ public class OurBot
          */
 
         //Define motor
+        leftRotation = hwMap.get(DcMotor.class, "leftRotation");
+        rightRotation = hwMap.get(DcMotor.class, "rightRotation");
         leftFront = hwMap.get(DcMotor.class, "leftFront");
         leftBack = hwMap.get(DcMotor.class, "leftBack");
         rightFront = hwMap.get(DcMotor.class, "rightFront");
@@ -103,25 +108,27 @@ public class OurBot
         claw = hwMap.get(Servo.class, "claw");
 
         //Initialize motor direction, reverse so positive motor power is forward
-        leftFront.setDirection(Direction.REVERSE);
-        leftBack.setDirection(Direction.REVERSE);
-        rightFront.setDirection(Direction.REVERSE);
-        rightBack.setDirection(Direction.REVERSE);
+        leftRotation.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRotation.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(Direction.FORWARD);
+        leftBack.setDirection(Direction.FORWARD);
+        rightFront.setDirection(Direction.FORWARD);
+        rightBack.setDirection(Direction.FORWARD);
         arm.setDirection(Direction.REVERSE);
 
 
 
         //Set all motors to 0 power
+        leftRotation.setPower(0);
+        rightRotation.setPower(0);
         leftFront.setPower(0);
         leftBack.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
         arm.setPower(0);
-        //use BNO055IMU sensor with encoders for precise position
-        //use roll to control turns and such
-        //get vuforia set up, then IMU with encoders, then combine them
 
-        claw.setPosition(0.1);
+
+
 
 
 
@@ -129,10 +136,16 @@ public class OurBot
 
         //Reset all encoders
         leftFront.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        leftRotation.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        rightRotation.setMode(RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        arm.setMode((RunMode.STOP_AND_RESET_ENCODER));
+        arm.setMode(RunMode.STOP_AND_RESET_ENCODER);
+
+        //set initial target position for motors using RUN_TO_POSITION
+        leftRotation.setTargetPosition(leftRotation.getCurrentPosition());
+        rightRotation.setTargetPosition(rightRotation.getCurrentPosition());
 
 
         //Set motors to run with encoder
@@ -143,6 +156,11 @@ public class OurBot
         arm.setMode(RunMode.RUN_USING_ENCODER);
 
 
+        //set rotation to run to certain position
+        leftRotation.setMode(RunMode.RUN_TO_POSITION);
+        rightRotation.setMode(RunMode.RUN_TO_POSITION);
+
+
 
         //stops motors when 0 power, more precision
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -150,6 +168,8 @@ public class OurBot
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 }

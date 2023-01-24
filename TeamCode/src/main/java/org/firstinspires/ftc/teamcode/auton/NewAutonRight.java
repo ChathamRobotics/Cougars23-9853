@@ -1,36 +1,40 @@
 package org.firstinspires.ftc.teamcode.auton;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 @Autonomous
-public class RedRight extends BaseAutonOpenCVWebcam {
-    int zone;
-    final int ARM_HOVER_INCHES = 6;
-    int greenAverage, redAverage, blueAverage;
+@Disabled
+public class NewAutonRight extends BaseAuton{
     int rotation2Target;
     int rotation1Target;
     public DcMotor rotation1;
     public DcMotor rotation2;
+    // The IMU sensor object
+    BNO055IMU imu;
 
-    DistanceSensor distanceSensor;
+    // State used for updating telemetry
+    Orientation angles;
+    Acceleration gravity;
 
+    @Override
+    public void runOpMode() {
 
-    public void runOpMode()
-    {
-
-
-        //sets up webcam and robot from parent class
+        //sets up auton by running parent's method
         super.runOpMode();
-        /*distanceSensor = hardwareMap.get(DistanceSensor.class, "" +
-                "" +
-                "" +
-                "distanceSensor");*/
 
-        //wait for driver to press start
         //sets up rotation motor1
         rotation1 = hardwareMap.get(DcMotor.class, "leftRotation");
         rotation1.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -53,46 +57,24 @@ public class RedRight extends BaseAutonOpenCVWebcam {
 
         robot.claw.setPosition(0.7);
 
-        telemetry.addData(">", "press play pls");
-        telemetry.update();
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+
+
+        //wait for driver to press play
         waitForStart();
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-
-
-
-
-
-
-        while(pipeline.getRedAverage() == 0 )
-        {
-            telemetry.addData("Status", "not working");
-            telemetry.update();
-            sleep(5);
-        }
-
-        telemetry.addData("Status", "it worked!");
-        telemetry.update();
-
-
-
-        //if blue is the color
-        if ( pipeline.getBlueAverage() > pipeline.getGreenAverage() && pipeline.getBlueAverage() > pipeline.getRedAverage())
-        {
-            telemetry.addData("Color", "Blue");
-            zone = 1;
-        }
-
-        //if color is green
-        else if (pipeline.getGreenAverage() > pipeline.getBlueAverage() && pipeline.getGreenAverage() > pipeline.getRedAverage())
-        {
-            telemetry.addData("Color", "Green");
-            zone = 2;
-        }
-        else{
-            telemetry.addData("Color", "Red");
-            zone = 3;
-        }
-        telemetry.update();
         robot.leftFront.setTargetPosition((int) -(robot.COUNTS_PER_INCH*47));
         robot.leftBack.setTargetPosition((int) -(robot.COUNTS_PER_INCH*47));
         robot.rightFront.setTargetPosition((int) -(robot.COUNTS_PER_INCH*47));
@@ -114,12 +96,20 @@ public class RedRight extends BaseAutonOpenCVWebcam {
 
         while(robot.rightBack.isBusy() || robot.leftBack.isBusy() || robot.rightFront.isBusy() || robot.leftFront.isBusy()){
             //
-
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            telemetry.addData("Heading", angles.firstAngle);
+            telemetry.addData("roll", angles.secondAngle);
+            telemetry.addData("pitch", angles.thirdAngle);
+            telemetry.update();
         }
 
+        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        telemetry.addData("Heading", angles.firstAngle);
+        telemetry.addData("roll", angles.secondAngle);
+        telemetry.addData("pitch", angles.thirdAngle);
+        telemetry.update();
 
-
-
+        sleep(6000);
 
 
 
@@ -127,7 +117,7 @@ public class RedRight extends BaseAutonOpenCVWebcam {
         rotation2.setTargetPosition(980);
         while(rotation1.isBusy() && rotation2.isBusy())
         {
-            //
+         //
         }
         sleep(500);
         //strafe "left"
@@ -170,10 +160,10 @@ public class RedRight extends BaseAutonOpenCVWebcam {
         robot.leftBack.setPower(0.2);
         robot.rightFront.setPower(0.2);
         robot.rightBack.setPower(0.2);
-        robot.leftFront.setTargetPosition(  robot.leftFront.getCurrentPosition() + (int)(robot.COUNTS_PER_INCH*1.4));
-        robot.leftBack.setTargetPosition(robot.leftBack.getCurrentPosition()+(int)(robot.COUNTS_PER_INCH*1.4));
-        robot.rightFront.setTargetPosition(robot.rightFront.getCurrentPosition()+(int)(robot.COUNTS_PER_INCH*1.4));
-        robot.rightBack.setTargetPosition(robot.rightBack.getCurrentPosition()+(int)(robot.COUNTS_PER_INCH*1.4));
+        robot.leftFront.setTargetPosition(  robot.leftFront.getCurrentPosition() + (int)(robot.COUNTS_PER_INCH*2.5));
+        robot.leftBack.setTargetPosition(robot.leftBack.getCurrentPosition()+(int)(robot.COUNTS_PER_INCH*2.5));
+        robot.rightFront.setTargetPosition(robot.rightFront.getCurrentPosition()+(int)(robot.COUNTS_PER_INCH*2.5));
+        robot.rightBack.setTargetPosition(robot.rightBack.getCurrentPosition()+(int)(robot.COUNTS_PER_INCH*2.5));
 
 
         while(robot.rightBack.isBusy() || robot.leftBack.isBusy() || robot.rightFront.isBusy() || robot.leftFront.isBusy()){
@@ -215,41 +205,6 @@ public class RedRight extends BaseAutonOpenCVWebcam {
         telemetry.update();
         sleep(1000);  // pause to display final telemetry message.
 
-
-
-
-
-
-        switch(zone)
-        {
-            case(1):
-                //move back, left, and up
-                encoderDrive(0.3, -3, -3, -3, -3, 10, true);
-                encoderDrive(0.3, 12, -12, -12, 12, 10, true);
-                //encoderDrive(0.3, 26, 26, 26, 26, 10, true);
-                break;
-            case(2):
-                //move back, right, and up
-                encoderDrive(0.3, -3, -3, -3, -3, 10, true);
-                encoderDrive(0.3, -15, 15, 15, -15, 10, true);
-                //encoderDrive(0.3, 26, 26, 26, 26, 10, true);
-                break;
-            case(3):
-                //move back, far right, and up
-                encoderDrive(0.3, -3, -3, -3, -3, 10, true);
-                encoderDrive(0.3, -40, 40, 40, -40, 10, true);
-                //encoderDrive(0.3, 26, 26, 26, 26, 10, true);
-                break;
-            default:
-                break;
-        }
-
-
-
-
-
-        telemetry.update();
-        sleep(4000);
 
 
 

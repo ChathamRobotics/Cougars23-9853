@@ -32,6 +32,7 @@ public class MainDrive extends LinearOpMode{
 
         //add initial message
         telemetry.addData("Status", "Initialized");
+        telemetry.speak("nine eight five three is bad");
         telemetry.update();
 
         // Let OurRobot do the heavy lifting of getting and initializing the hardware
@@ -146,7 +147,7 @@ public class MainDrive extends LinearOpMode{
 
             robot.arm.setPower(-gamepad2.left_stick_y * basePower);
 
-            //controls claw
+            /*//controls claw
             if(gamepad2.right_trigger > 0)
             {
                 //closed position = 0.82
@@ -155,7 +156,7 @@ public class MainDrive extends LinearOpMode{
             {
                 //open position = 0.53556
                 robot.claw.setPosition(0.25);
-            }
+            }*/
 
 
             // Updates telemetry
@@ -174,7 +175,7 @@ public class MainDrive extends LinearOpMode{
             telemetry.addData("Orientation", orientation);
             telemetry.addData("Left Power", leftPower);
             telemetry.addData("Right Power", rightPower);
-            telemetry.addData("Claw Servo position", robot.claw.getPosition());
+            //telemetry.addData("Claw Servo position", robot.claw.getPosition());
             telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Power", -gamepad2.left_stick_y * basePower);
             telemetry.update();

@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode.auton;
 
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.OurBot;
+import org.firstinspires.ftc.teamcode.auton.BaseAutonOpenCVWebcam;
 
 @Autonomous
+@Disabled
 public class RedLeft extends BaseAutonOpenCVWebcam {
     int zone;
     final int ARM_HOVER_INCHES = 6;
