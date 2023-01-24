@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.OurBot;
 
@@ -19,8 +20,9 @@ public class MecanumDrive extends LinearOpMode {
     boolean backwards = false;
     int rotationRightTarget;
     int rotationLeftTarget;
-    public DcMotor rotation1;
-    public DcMotor rotation2;
+
+    public Servo clawRotation;
+
     int lowPositionAuton = -710;
     int highPositionAuton = 0;
 
@@ -36,6 +38,8 @@ public class MecanumDrive extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         robot.init(hardwareMap);
+        clawRotation = hardwareMap.get(Servo.class, "clawRotation");
+
 
 
         robot.leftRotation.setPower(0.3);
@@ -45,6 +49,7 @@ public class MecanumDrive extends LinearOpMode {
 
         waitForStart();
         power = basePower;
+        clawRotation.setPosition(0);
         while(opModeIsActive())
         {
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
@@ -138,7 +143,7 @@ public class MecanumDrive extends LinearOpMode {
             }else if (gamepad2.left_trigger > 0)
             {
                 //open position = 0.53556
-                if(rotation1.getCurrentPosition() < -300 )
+                if(robot.leftRotation.getCurrentPosition() < -300 )
                 {
                     robot.claw.setPosition(0.35);
 
@@ -158,14 +163,24 @@ public class MecanumDrive extends LinearOpMode {
                 rotationRightTarget -=5;
             }
 
+            if(gamepad2.dpad_left)
+            {
+                clawRotation.setPosition(clawRotation.getPosition() + 0.01);
+            }else if(gamepad2.dpad_right){
+                clawRotation.setPosition(clawRotation.getPosition() - 0.01);
+            }
+
 
             //actively updates target position
-            rotation1.setTargetPosition(rotationLeftTarget);
-            rotation2.setTargetPosition(rotationRightTarget);
+            robot.leftRotation.setTargetPosition(rotationLeftTarget);
+            robot.rightRotation.setTargetPosition(rotationRightTarget);
 
             telemetry.addData("Arm position", robot.arm.getCurrentPosition());
             telemetry.addData("Backwards", backwards);
             telemetry.addData("High rotational position", highPosition);
+            telemetry.addData("claw rotation position", clawRotation.getPosition());
+            telemetry.addData("motor1 position", robot.leftFront.getCurrentPosition());
+            telemetry.addData("motor2 position", robot.leftBack.getCurrentPosition());
             telemetry.update();
 
 
