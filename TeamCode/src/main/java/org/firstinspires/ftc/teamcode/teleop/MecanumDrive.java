@@ -42,10 +42,10 @@ public class MecanumDrive extends LinearOpMode {
 
 
 
-        robot.leftRotation.setPower(0.3);
+        robot.leftRotation.setPower(0);
 
 
-        robot.rightRotation.setPower(0.3);
+        robot.rightRotation.setPower(0);
 
         waitForStart();
         power = basePower;
@@ -174,6 +174,24 @@ public class MecanumDrive extends LinearOpMode {
             //actively updates target position
             robot.leftRotation.setTargetPosition(rotationLeftTarget);
             robot.rightRotation.setTargetPosition(rotationRightTarget);
+
+            //add speed for moving arm
+            if(Math.abs(robot.leftRotation.getCurrentPosition() - robot.leftRotation.getTargetPosition()) >= 5 )
+            {
+                robot.leftRotation.setPower(0.5);
+                robot.rightRotation.setPower(0.5);
+            }else{
+                robot.leftRotation.setPower(0.6);
+                robot.rightRotation.setPower(0.6);
+            }
+
+            //if robot going down
+            if(robot.leftRotation.getCurrentPosition() < lowPosition + 400 && robot.leftRotation.getTargetPosition() == lowPosition){
+                clawRotation.setPosition(0.83);
+            }else if (highPosition - robot.leftRotation.getCurrentPosition() < 400 && robot.leftRotation.getTargetPosition() == highPosition){
+                clawRotation.setPosition(0.37);
+            }
+
 
             telemetry.addData("Arm position", robot.arm.getCurrentPosition());
             telemetry.addData("Backwards", backwards);
