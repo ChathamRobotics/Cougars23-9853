@@ -178,6 +178,7 @@ public class MecanumDrive extends LinearOpMode {
             //add speed for moving arm
             if(Math.abs(robot.leftRotation.getCurrentPosition() - robot.leftRotation.getTargetPosition()) >= 5 )
             {
+
                 robot.leftRotation.setPower(0.5);
                 robot.rightRotation.setPower(0.5);
             }else{
