@@ -83,8 +83,8 @@ public class OurBot
     public DcMotor leftBack = null;
     public DcMotor rightFront = null;
     public DcMotor rightBack = null;
-    public DcMotor leftRotation = null;
-    public DcMotor rightRotation = null;
+    //public DcMotor leftRotation = null;
+    //public DcMotor rightRotation = null;
     public DcMotor arm = null;
     public Servo claw = null;
 
@@ -98,8 +98,8 @@ public class OurBot
          */
 
         //Define motor
-        leftRotation = hwMap.get(DcMotor.class, "leftRotation");
-        rightRotation = hwMap.get(DcMotor.class, "rightRotation");
+        //leftRotation = hwMap.get(DcMotor.class, "leftRotation");
+        //rightRotation = hwMap.get(DcMotor.class, "rightRotation");
         leftFront = hwMap.get(DcMotor.class, "leftFront");
         leftBack = hwMap.get(DcMotor.class, "leftBack");
         rightFront = hwMap.get(DcMotor.class, "rightFront");
@@ -108,8 +108,8 @@ public class OurBot
         claw = hwMap.get(Servo.class, "claw");
 
         //Initialize motor direction, reverse so positive motor power is forward
-        leftRotation.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRotation.setDirection(DcMotorSimple.Direction.REVERSE);
+        //leftRotation.setDirection(DcMotorSimple.Direction.REVERSE);
+        //rightRotation.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(Direction.FORWARD);
         leftBack.setDirection(Direction.FORWARD);
         rightFront.setDirection(Direction.FORWARD);
@@ -119,8 +119,8 @@ public class OurBot
 
 
         //Set all motors to 0 power
-        leftRotation.setPower(0);
-        rightRotation.setPower(0);
+        //leftRotation.setPower(0);
+        //rightRotation.setPower(0);
         leftFront.setPower(0);
         leftBack.setPower(0);
         rightFront.setPower(0);
@@ -136,16 +136,16 @@ public class OurBot
 
         //Reset all encoders
         leftFront.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        leftRotation.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        rightRotation.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        //leftRotation.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        //rightRotation.setMode(RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(RunMode.STOP_AND_RESET_ENCODER);
 
         //set initial target position for motors using RUN_TO_POSITION
-        leftRotation.setTargetPosition(leftRotation.getCurrentPosition());
-        rightRotation.setTargetPosition(rightRotation.getCurrentPosition());
+        //leftRotation.setTargetPosition(leftRotation.getCurrentPosition());
+        //rightRotation.setTargetPosition(rightRotation.getCurrentPosition());
 
 
         //Set motors to run with encoder
@@ -157,8 +157,7 @@ public class OurBot
 
 
         //set rotation to run to certain position
-        leftRotation.setMode(RunMode.RUN_TO_POSITION);
-        rightRotation.setMode(RunMode.RUN_TO_POSITION);
+
 
 
 
@@ -168,8 +167,8 @@ public class OurBot
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //leftRotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //rightRotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 }

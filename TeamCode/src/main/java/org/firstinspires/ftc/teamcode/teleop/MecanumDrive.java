@@ -18,38 +18,27 @@ public class MecanumDrive extends LinearOpMode {
     double basePower = 0.5;
     double power;
     boolean backwards = false;
-    int rotationRightTarget;
-    int rotationLeftTarget;
-
-    public Servo clawRotation;
-
-    int lowPositionAuton = -710;
-    int highPositionAuton = 0;
 
 
-    //have to check these
-    int lowPositionNormal = 50;
-    int highPositionNormal = 950;
 
-    int lowPosition = lowPositionAuton;
-    int highPosition = highPositionAuton;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         robot.init(hardwareMap);
-        clawRotation = hardwareMap.get(Servo.class, "clawRotation");
 
 
 
-        robot.leftRotation.setPower(0);
+
+        //robot.leftRotation.setPower(0);
 
 
-        robot.rightRotation.setPower(0);
+        //robot.rightRotation.setPower(0);
 
         waitForStart();
         power = basePower;
-        clawRotation.setPosition(0);
+
         while(opModeIsActive())
         {
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
@@ -86,21 +75,28 @@ public class MecanumDrive extends LinearOpMode {
 
             //arm max = 2239
             //controls how far the arm goes
-            if((gamepad2.left_stick_y > 0 && robot.arm.getCurrentPosition() > 5) ||(gamepad2.left_stick_y < 0 && robot.arm.getCurrentPosition() < 2239) ){
+            /*if((gamepad2.left_stick_y > 0 && robot.arm.getCurrentPosition() > 5) ||(gamepad2.left_stick_y < 0 && robot.arm.getCurrentPosition() < 2239) ){
                 robot.arm.setPower(-(gamepad2.left_stick_y * 0.7));
+            }else{
+                robot.arm.setPower(0);
+            }*/
+
+            if((gamepad2.left_stick_y > 0 && robot.arm.getCurrentPosition() > 0) || (gamepad2.left_stick_y < 0 && robot.arm.getCurrentPosition() < 3880)){
+                robot.arm.setPower(-(gamepad2.left_stick_y) * 0.9);
             }else{
                 robot.arm.setPower(0);
             }
 
 
+
             //sets so that you can change macro based on if you did auton before or not
-            if(gamepad2.y && gamepad2.b){
+            /*if(gamepad2.y && gamepad2.b){
                 highPosition = highPositionAuton;
                 lowPosition = lowPositionAuton;
             }else if (gamepad2.x && gamepad2.a){
                 highPosition = highPositionNormal;
                 lowPosition = lowPositionNormal;
-            }
+            }*/
 
             //controls power
             if(gamepad1.triangle)
@@ -118,7 +114,7 @@ public class MecanumDrive extends LinearOpMode {
 
 
             //macros for controller
-            if(gamepad2.y)
+            /*if(gamepad2.y)
             {
 
                 //goes up
@@ -130,7 +126,7 @@ public class MecanumDrive extends LinearOpMode {
                 //goes down
                 rotationLeftTarget = lowPosition;
                 rotationRightTarget = lowPosition;
-            }
+            }*/
 
 
 
@@ -139,44 +135,40 @@ public class MecanumDrive extends LinearOpMode {
             if(gamepad2.right_trigger > 0)
             {
                 //closed position = 0.82
+                //close claw
                 robot.claw.setPosition(0.7);
             }else if (gamepad2.left_trigger > 0)
             {
-                //open position = 0.53556
-                if(robot.leftRotation.getCurrentPosition() < -300 )
-                {
-                    robot.claw.setPosition(0.35);
+                //open claw
+                robot.claw.setPosition(0.5);
 
-                }else{
-                    robot.claw.setPosition(0.55);
-                }
 
             }
 
 
             //manually controls arm rotation position
-            if(gamepad2.dpad_up){
+            /*if(gamepad2.dpad_up){
                 rotationLeftTarget += 5;
                 rotationRightTarget += 5;
             }else if(gamepad2.dpad_down){
                 rotationLeftTarget -= 5;
                 rotationRightTarget -=5;
-            }
+            }*/
 
-            if(gamepad2.dpad_left)
+            /*if(gamepad2.dpad_left)
             {
                 clawRotation.setPosition(clawRotation.getPosition() + 0.01);
             }else if(gamepad2.dpad_right){
                 clawRotation.setPosition(clawRotation.getPosition() - 0.01);
-            }
+            }*/
 
 
             //actively updates target position
-            robot.leftRotation.setTargetPosition(rotationLeftTarget);
-            robot.rightRotation.setTargetPosition(rotationRightTarget);
+            /*robot.leftRotation.setTargetPosition(rotationLeftTarget);
+            robot.rightRotation.setTargetPosition(rotationRightTarget);*/
 
             //add speed for moving arm
-            if(Math.abs(robot.leftRotation.getCurrentPosition() - robot.leftRotation.getTargetPosition()) >= 5 )
+            /*if(Math.abs(robot.leftRotation.getCurrentPosition() - robot.leftRotation.getTargetPosition()) >= 5 )
             {
 
                 robot.leftRotation.setPower(0.5);
@@ -184,22 +176,21 @@ public class MecanumDrive extends LinearOpMode {
             }else{
                 robot.leftRotation.setPower(0.6);
                 robot.rightRotation.setPower(0.6);
-            }
+            }*/
 
             //if robot going down
-            if(robot.leftRotation.getCurrentPosition() < lowPosition + 400 && robot.leftRotation.getTargetPosition() == lowPosition){
+            /*if(robot.leftRotation.getCurrentPosition() < lowPosition + 400 && robot.leftRotation.getTargetPosition() == lowPosition){
                 clawRotation.setPosition(0.83);
             }else if (highPosition - robot.leftRotation.getCurrentPosition() < 400 && robot.leftRotation.getTargetPosition() == highPosition){
                 clawRotation.setPosition(0.37);
-            }
+            }*/
 
 
             telemetry.addData("Arm position", robot.arm.getCurrentPosition());
             telemetry.addData("Backwards", backwards);
-            telemetry.addData("High rotational position", highPosition);
-            telemetry.addData("claw rotation position", clawRotation.getPosition());
-            telemetry.addData("motor1 position", robot.leftFront.getCurrentPosition());
-            telemetry.addData("motor2 position", robot.leftBack.getCurrentPosition());
+
+
+
             telemetry.update();
 
 

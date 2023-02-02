@@ -18,6 +18,9 @@ import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -43,11 +46,14 @@ import java.util.Objects;
 @Config
 @Autonomous(group = "drive")
 public class ManualFeedforwardTuner extends LinearOpMode {
-    public static double DISTANCE = 72; // in
+    public static double DISTANCE = 100; // in
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
     private SampleMecanumDrive drive;
+    public DcMotor leftRotation = null;
+    public DcMotor rightRotation = null;
+    public Servo clawRotation;
 
     enum Mode {
         DRIVER_MODE,
@@ -71,6 +77,22 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, dashboard.getTelemetry());
 
+        clawRotation = hardwareMap.get(Servo.class, "clawRotation");
+        leftRotation = hardwareMap.get(DcMotor.class, "leftRotation");
+        rightRotation = hardwareMap.get(DcMotor.class, "rightRotation");
+        leftRotation.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRotation.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRotation.setTargetPosition(leftRotation.getCurrentPosition());
+        rightRotation.setTargetPosition(rightRotation.getCurrentPosition());
+        leftRotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRotation.setPower(0.4);
+        rightRotation.setPower(0.4);
+
+
+
         drive = new SampleMecanumDrive(hardwareMap);
 
         mode = Mode.TUNING_MODE;
@@ -82,6 +104,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
         telemetry.clearAll();
 
         waitForStart();
+        clawRotation.setPosition(0.45);
 
         if (isStopRequested()) return;
 

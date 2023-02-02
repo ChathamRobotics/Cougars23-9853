@@ -11,6 +11,9 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -37,6 +40,9 @@ import java.util.List;
 public class AutomaticFeedforwardTuner extends LinearOpMode {
     public static double MAX_POWER = 0.7;
     public static double DISTANCE = 100; // in
+    public DcMotor leftRotation = null;
+    public DcMotor rightRotation = null;
+    public Servo clawRotation;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -46,6 +52,22 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
         }
 
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        clawRotation = hardwareMap.get(Servo.class, "clawRotation");
+        leftRotation = hardwareMap.get(DcMotor.class, "leftRotation");
+        rightRotation = hardwareMap.get(DcMotor.class, "rightRotation");
+        leftRotation.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRotation.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRotation.setTargetPosition(leftRotation.getCurrentPosition());
+        rightRotation.setTargetPosition(rightRotation.getCurrentPosition());
+        leftRotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRotation.setPower(0.4);
+        rightRotation.setPower(0.4);
+
+        clawRotation.setPosition(0.45);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
